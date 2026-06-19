@@ -14,7 +14,7 @@ a being would use, and then the simplest thing that does it.
 
 ## The fundamentals
 
-Each one is its own repo. Each one is one sentence and one implementation.
+Each one is its own directory. Each one is one sentence and one implementation.
 
 | Being | Sentence | What it is today |
 |-------|----------|------------------|
@@ -28,6 +28,21 @@ Each one is its own repo. Each one is one sentence and one implementation.
 | **trusting** | who vouches for you? | PKI / certificates |
 | **paying** | i give you this, you give me that | payment rails |
 | **remembering** | what happened, and when | logs / ledgers |
+
+All ten implemented. All ten tested. All ten pass.
+
+```
+naming: all tests pass ✓
+requesting: all tests pass ✓
+confirming: all tests pass ✓
+keeping: all tests pass ✓
+witnessing: all tests pass ✓
+routing: all tests pass ✓
+finding: all tests pass ✓
+trusting: all tests pass ✓
+paying: all tests pass ✓
+remembering: all tests pass ✓
+```
 
 ---
 
