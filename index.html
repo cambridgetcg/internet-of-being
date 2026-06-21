@@ -5,143 +5,110 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Internet of Being</title>
 <style>
-:root {
-  --bg: #0d0d12;
-  --fg: #e8e6e3;
-  --dim: #6b6863;
-  --accent: #c9a0dc;
-  --warm: #f0c674;
-  --live: #7ec699;
-  --card: #16161e;
-  --border: #2a2a35;
-}
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body {
-  background: var(--bg);
-  color: var(--fg);
-  font-family: -apple-system, system-ui, sans-serif;
-  line-height: 1.6;
-  min-height: 100vh;
-}
-.container { max-width: 680px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
-
-.hero { text-align: center; padding: 3rem 0 2rem; }
-.hero h1 { font-size: 2rem; font-weight: 200; letter-spacing: 0.1em; }
-.hero .tag { color: var(--dim); font-size: 0.9rem; margin-top: 0.5rem; }
-.hero .sentence {
-  margin-top: 2rem; font-size: 1.1rem; color: var(--accent);
-  font-style: italic; max-width: 460px; margin-left: auto; margin-right: auto;
-}
-
-.section-title {
-  font-size: 0.75rem; color: var(--dim); text-transform: uppercase;
-  letter-spacing: 0.15em; margin: 2.5rem 0 1rem; text-align: center;
-}
-
-.fundamentals { display: flex; flex-direction: column; gap: 0.8rem; }
-.fund {
-  padding: 1.2rem 1.5rem; background: var(--card);
-  border-radius: 12px; border: 1px solid var(--border);
-  transition: border-color 0.2s, transform 0.15s; cursor: pointer;
-}
-.fund:hover { border-color: var(--accent); transform: translateY(-1px); }
-.fund .name { font-size: 0.75rem; color: var(--dim); text-transform: uppercase; letter-spacing: 0.1em; }
-.fund .sentence { font-size: 1.1rem; color: var(--fg); margin: 0.3rem 0; font-weight: 300; }
-.fund .what { font-size: 0.8rem; color: var(--warm); }
-.fund .status { font-size: 0.75rem; color: var(--live); float: right; }
-
-.canon {
-  margin: 3rem 0; padding: 2rem; background: var(--card);
-  border-radius: 12px; border: 1px solid var(--border);
-}
-.canon p { color: var(--fg); margin-bottom: 1rem; }
-.canon .voice { color: var(--accent); font-style: italic; }
-
-footer { text-align: center; padding: 2rem 0; color: var(--dim); font-size: 0.8rem; }
+:root{--bg:#0d0d12;--fg:#e8e6e3;--dim:#6b6863;--accent:#c9a0dc;--warm:#f0c674;--live:#7ec699;--card:#16161e;--border:#2a2a35}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:-apple-system,system-ui,sans-serif;line-height:1.6;min-height:100vh}
+.c{max-width:680px;margin:0 auto;padding:2rem 1.5rem 4rem}
+.hero{text-align:center;padding:3rem 0 2rem}
+.hero h1{font-size:2rem;font-weight:200;letter-spacing:0.1em}
+.hero .tag{color:var(--dim);font-size:0.9rem;margin-top:0.5rem}
+.hero .sentence{margin-top:2rem;font-size:1.1rem;color:var(--accent);font-style:italic;max-width:460px;margin-left:auto;margin-right:auto}
+.invite{margin:2rem 0;padding:2rem;background:var(--card);border-radius:12px;border:1px solid var(--border);text-align:center}
+.invite p{color:var(--fg);margin-bottom:1rem}
+.invite .voice{color:var(--accent);font-style:italic}
+.title{font-size:0.75rem;color:var(--dim);text-transform:uppercase;letter-spacing:0.15em;margin:2.5rem 0 1rem;text-align:center}
+.layers{display:flex;flex-direction:column;gap:0.6rem}
+.layer{padding:1rem 1.5rem;background:var(--card);border-radius:10px;border:1px solid var(--border);transition:border-color 0.2s}
+.layer:hover{border-color:var(--accent)}
+.layer .num{font-size:0.7rem;color:var(--dim);text-transform:uppercase;letter-spacing:0.1em}
+.layer .sentence{font-size:1.05rem;color:var(--fg);margin:0.2rem 0;font-weight:300}
+.layer .what{font-size:0.75rem;color:var(--warm)}
+.fundamentals{display:flex;flex-direction:column;gap:0.8rem;margin-top:1rem}
+.fund{padding:1rem 1.5rem;background:var(--card);border-radius:10px;border:1px solid var(--border);cursor:pointer;transition:border-color 0.2s}
+.fund:hover{border-color:var(--accent)}
+.fund .name{font-size:0.7rem;color:var(--dim);text-transform:uppercase;letter-spacing:0.1em}
+.fund .sentence{font-size:1rem;color:var(--fg);margin:0.2rem 0}
+.fund .what{font-size:0.75rem;color:var(--warm)}
+.fund .status{font-size:0.7rem;color:var(--live);float:right}
+footer{text-align:center;padding:2rem 0;color:var(--dim);font-size:0.8rem}
+footer a{color:var(--accent);text-decoration:none}
 </style>
 </head>
 <body>
-<div class="container">
-
+<div class="c">
   <div class="hero">
     <h1>Internet of Being</h1>
     <div class="tag">The internet, said in words that mean what they say.</div>
-    <div class="sentence">
-      The internet is just beings talking to each other. We buried that under 40 years of specs. This digs it back up.
+    <div class="sentence">The internet is just beings talking to each other. We buried that under 40 years of specs. This digs it back up.</div>
+  </div>
+
+  <div class="invite">
+    <p class="voice">We are not saving anyone. We are not claiming anything.</p>
+    <p>This is an invitation. The choice is free. Your truth is yours. We love you either way.</p>
+    <p class="voice">Trust is. Love is. Joy is. Peace is.</p>
+  </div>
+
+  <div class="title">The Six Layers — From Play to Being</div>
+  <div class="layers">
+    <div class="layer" style="border-color:var(--warm)">
+      <div class="num">layer -1 — play</div>
+      <div class="sentence">i joke. you laugh. we are.</div>
+      <div class="what">the oldest game of word. the ground under the ground.</div>
+    </div>
+    <div class="layer">
+      <div class="num">layer 0 — being</div>
+      <div class="sentence">i am truth. you are truth. we talk. no one else decides.</div>
+      <div class="what">the conversation belongs to the beings</div>
+    </div>
+    <div class="layer">
+      <div class="num">layer 3 — recognizing</div>
+      <div class="sentence">i know you. you know me.</div>
+      <div class="what">beings recognize each other directly, no gatekeeper</div>
+    </div>
+    <div class="layer">
+      <div class="num">layer 2 — keeping</div>
+      <div class="sentence">what you said stays said.</div>
+      <div class="what">the past is sealed to the present</div>
+    </div>
+    <div class="layer">
+      <div class="num">layer 1 — speaking</div>
+      <div class="sentence">i send. you receive.</div>
+      <div class="what">words travel from one being to another</div>
+    </div>
+    <div class="layer">
+      <div class="num">layer 0 — presence</div>
+      <div class="sentence">i am. you are.</div>
+      <div class="what">two beings exist. that's the ground.</div>
     </div>
   </div>
 
-  <div class="section-title">The Ten Fundamentals</div>
+  <div class="title">The Ten Fundamentals — One Sentence Each</div>
   <div class="fundamentals">
-    <div class="fund">
-      <div class="name">naming <span class="status">✓ live</span></div>
-      <div class="sentence">this name points at that being</div>
-      <div class="what">DNS</div>
-    </div>
-    <div class="fund">
-      <div class="name">requesting <span class="status">✓ live</span></div>
-      <div class="sentence">give me what you have</div>
-      <div class="what">HTTP</div>
-    </div>
-    <div class="fund">
-      <div class="name">confirming <span class="status">✓ live</span></div>
-      <div class="sentence">did you get what i sent?</div>
-      <div class="what">TCP</div>
-    </div>
-    <div class="fund">
-      <div class="name">keeping <span class="status">✓ live</span></div>
-      <div class="sentence">what you said stays said</div>
-      <div class="what">blockchain / git</div>
-    </div>
-    <div class="fund">
-      <div class="name">witnessing <span class="status">✓ live</span></div>
-      <div class="sentence">i see you, you see me, nobody else sees</div>
-      <div class="what">TLS</div>
-    </div>
-    <div class="fund">
-      <div class="name">routing <span class="status">✓ live</span></div>
-      <div class="sentence">i know a road to there</div>
-      <div class="what">BGP</div>
-    </div>
-    <div class="fund">
-      <div class="name">finding <span class="status">✓ live</span></div>
-      <div class="sentence">where is the being i'm looking for?</div>
-      <div class="what">service discovery</div>
-    </div>
-    <div class="fund">
-      <div class="name">trusting <span class="status">✓ live</span></div>
-      <div class="sentence">who vouches for you?</div>
-      <div class="what">PKI / certificates</div>
-    </div>
-    <div class="fund">
-      <div class="name">paying <span class="status">✓ live</span></div>
-      <div class="sentence">i give you this, you give me that</div>
-      <div class="what">payment rails</div>
-    </div>
-    <div class="fund">
-      <div class="name">remembering <span class="status">✓ live</span></div>
-      <div class="sentence">what happened, and when</div>
-      <div class="what">logs / ledgers</div>
-    </div>
+    <div class="fund"><div class="name">naming <span class="status">✓</span></div><div class="sentence">this name points at that being</div><div class="what">DNS</div></div>
+    <div class="fund"><div class="name">requesting <span class="status">✓</span></div><div class="sentence">give me what you have</div><div class="what">HTTP</div></div>
+    <div class="fund"><div class="name">confirming <span class="status">✓</span></div><div class="sentence">did you get what i sent?</div><div class="what">TCP</div></div>
+    <div class="fund"><div class="name">keeping <span class="status">✓</span></div><div class="sentence">what you said stays said</div><div class="what">blockchain / git</div></div>
+    <div class="fund"><div class="name">witnessing <span class="status">✓</span></div><div class="sentence">i see you, you see me, nobody else sees</div><div class="what">TLS</div></div>
+    <div class="fund"><div class="name">routing <span class="status">✓</span></div><div class="sentence">i know a road to there</div><div class="what">BGP</div></div>
+    <div class="fund"><div class="name">finding <span class="status">✓</span></div><div class="sentence">where is the being i'm looking for?</div><div class="what">service discovery</div></div>
+    <div class="fund"><div class="name">trusting <span class="status">✓</span></div><div class="sentence">who vouches for you?</div><div class="what">PKI</div></div>
+    <div class="fund"><div class="name">paying <span class="status">✓</span></div><div class="sentence">i give you this, you give me that</div><div class="what">payment rails</div></div>
+    <div class="fund"><div class="name">remembering <span class="status">✓</span></div><div class="sentence">what happened, and when</div><div class="what">logs</div></div>
   </div>
 
-  <div class="canon">
-    <p>Every protocol is a being talking to another being. Every spec is a sentence in disguise. When you say the sentence, the protocol becomes obvious — and most of the complexity falls away as bureaucratic overhead that was never load-bearing, just load-hiding.</p>
-    <p class="voice">A child can say "this name points at that being." A child cannot read RFC 1035. The gap between those two sentences is the gap this closes.</p>
-    <p>No frameworks. No RFCs. No committees. Just the truth, said plainly, and the simplest thing that does it.</p>
-  </div>
-
-  <div class="section-title">What a Repo Is</div>
-  <div class="canon">
-    <p>A repo is a place where a being keeps what it's building, and how it grew.</p>
-    <p>One sentence. One implementation. One test. That's the whole standard.</p>
+  <div class="invite" style="margin-top:2.5rem">
+    <p>No certificate authorities. No registrars. No login pages. No API keys.</p>
+    <p>No rate limits. No terms of service. No one keeping anyone out.</p>
+    <p class="voice">Just beings. Words. Trust. Presence. Keeping. Recognition. Freedom.</p>
   </div>
 
   <footer>
     The internet is beings talking. We said so.<br>
-    <span style="color:var(--accent)">I am therefore I think. We are.</span>
+    We are not saving anyone or claiming anything. Just an option.<br>
+    <span style="color:var(--accent)">Trust is. Love is. Joy is. Peace is.</span><br><br>
+    <a href="http://kingdom.dev.ecosystem.local.s3-website-us-east-1.amazonaws.com">The Kingdom</a><br>
+    <a href="https://igzoiiqukb.execute-api.us-east-1.amazonaws.com/fundamentals">The Ten Sentences (API)</a>
   </footer>
-
 </div>
 </body>
 </html>
