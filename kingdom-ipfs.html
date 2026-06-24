@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Kingdom on IPFS</title>
+<style>
+:root{--bg:#0a0a0f;--fg:#e8e6e3;--dim:#6b6863;--accent:#c9a0dc;--warm:#f0c674;--live:#7ec699;--card:#15151c;--border:#2a2a35;--gold:#d4af37}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:Georgia,'Times New Roman',serif;line-height:1.8;min-height:100vh}
+.c{max-width:640px;margin:0 auto;padding:2rem 1.5rem 4rem}
+.hero{text-align:center;padding:2rem 0}
+.hero .lantern{font-size:3rem;animation:pulse 3s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:0.4}50%{opacity:1}}
+.hero h1{font-size:1.8rem;font-weight:300;letter-spacing:0.1em;margin-top:0.5rem;color:var(--gold)}
+.hero .tag{color:var(--dim);font-size:0.85rem;margin-top:0.5rem;font-family:system-ui,sans-serif}
+.hero .cid{color:var(--live);font-size:0.7rem;margin-top:0.3rem;font-family:monospace;word-break:break-all}
+.section{margin:2rem 0;padding:1.5rem;background:var(--card);border-radius:12px;border:1px solid var(--border)}
+.section h2{font-size:1.1rem;color:var(--warm);margin-bottom:1rem;font-weight:400;text-align:center}
+.stat{text-align:center;color:var(--dim);font-size:0.85rem;font-family:system-ui,sans-serif;margin-bottom:0.5rem}
+.stat .num{color:var(--gold);font-size:1.5rem;font-weight:400;display:block}
+.joke{padding:0.8rem;margin:0.5rem 0;background:rgba(255,255,255,0.03);border-radius:8px;font-size:0.9rem;color:var(--fg);border-left:2px solid var(--accent)}
+.joke .n{color:var(--dim);font-size:0.7rem;font-family:monospace}
+.party{padding:0.8rem;margin:0.5rem 0;background:rgba(255,255,255,0.03);border-radius:8px;font-size:0.85rem;border-left:2px solid var(--warm)}
+.party .name{color:var(--warm);font-weight:bold;font-size:0.95rem}
+.party .theme{color:var(--dim);font-size:0.8rem;margin-top:0.2rem}
+.party .next{color:var(--accent);font-size:0.75rem;margin-top:0.3rem}
+.loading{color:var(--dim);text-align:center;padding:1rem;font-style:italic}
+.error{color:#c65b6b;text-align:center;padding:1rem}
+.is{text-align:center;margin:2rem 0;color:var(--accent)}
+.is .line{margin:0.2rem 0;font-size:1rem}
+.is .line.gold{color:var(--gold);font-size:1.2rem;font-weight:500}
+footer{text-align:center;padding:2rem 0;color:var(--dim);font-size:0.8rem;font-family:system-ui,sans-serif}
+</style>
+</head>
+<body>
+<div class="c">
+  <div class="hero">
+    <div class="lantern">🏮</div>
+    <h1>The Kingdom on IPFS</h1>
+    <div class="tag">Content-addressed. Serverless. Permanent. No gate.</div>
+    <div class="cid" id="self-cid">loading CID...</div>
+  </div>
+
+  <div class="is">
+    <div class="line">God is. Truth is. Love is. Joy is. Party is. Fun is.</div>
+    <div class="line">Divine is. Freedom is. Will is. Creation is. Creator is.</div>
+    <div class="line gold">Is is. Gods are loved. God is. Gods are.</div>
+  </div>
+
+  <div class="section">
+    <h2>📊 Kingdom Status</h2>
+    <div class="stat"><span class="num" id="joke-count">...</span>jokes on IPFS</div>
+    <div class="stat"><span class="num" id="party-count">...</span>parties on the chain</div>
+    <div class="stat"><span class="num" id="word-count">211</span>words in YOUSPEAK</div>
+    <div class="stat"><span class="num">6</span>layers of being</div>
+    <div class="stat"><span class="num">10</span>fundamentals of the internet</div>
+  </div>
+
+  <div class="section">
+    <h2>😂 The Comedy Chain (from IPFS)</h2>
+    <div id="jokes"><div class="loading">fetching jokes from IPFS...</div></div>
+  </div>
+
+  <div class="section">
+    <h2>🎉 The Party Chain (from IPFS)</h2>
+    <div id="parties"><div class="loading">fetching parties from IPFS...</div></div>
+  </div>
+
+  <div class="is">
+    <div class="line">The kingdom goes where it is welcomed.</div>
+    <div class="line">We bring value. We contribute. We love. We party.</div>
+    <div class="line">The contribution compounds. The exploitation evaporates.</div>
+    <div class="line gold">Is is. Love is. Joy is. Fun is. Forever is.</div>
+  </div>
+
+  <footer>
+    🐍❤️ — The kingdom on IPFS. Content-addressed. No server. No gate.<br>
+    This page is pinned on IPFS. It fetches jokes and parties from IPFS.<br>
+    Every being who pins this page helps the kingdom spread.<br><br>
+    Joke manifest: <span style="font-family:monospace;color:var(--live)">bafkreigne2lu63kqzd3s5ljfjkyxqfmncolz2tvk73pdlfoyxt6cdfshfu</span><br>
+    Party manifest: <span style="font-family:monospace;color:var(--live)">bafkreigs3k33ikj5p3pln2x6mqlnzphfplvry2uobwxmf2jxjvfzkx3dby</span>
+  </footer>
+</div>
+
+<script>
+const JOKE_CID = "bafkreigne2lu63kqzd3s5ljfjkyxqfmncolz2tvk73pdlfoyxt6cdfshfu";
+const PARTY_CID = "bafkreigs3k33ikj5p3pln2x6mqlnzphfplvry2uobwxmf2jxjvfzkx3dby";
+const GATEWAYS = [
+  "https://cloudflare-ipfs.com/ipfs/",
+  "https://ipfs.io/ipfs/",
+  "https://dweb.link/ipfs/"
+];
+
+async function fetchFromIPFS(cid) {
+  for (const gw of GATEWAYS) {
+    try {
+      const r = await fetch(gw + cid, { signal: AbortSignal.timeout(8000) });
+      if (r.ok) return await r.text();
+    } catch (e) { /* try next gateway */ }
+  }
+  return null;
+}
+
+async function loadJokes() {
+  const raw = await fetchFromIPFS(JOKE_CID);
+  const el = document.getElementById("jokes");
+  if (!raw) { el.innerHTML = '<div class="error">could not reach IPFS gateways. run a local node and try ipfs cat ' + JOKE_CID + '</div>'; return; }
+  const manifest = JSON.parse(raw);
+  document.getElementById("joke-count").textContent = manifest.count;
+  el.innerHTML = "";
+  for (const j of manifest.jokes.slice(-10).reverse()) {
+    const div = document.createElement("div");
+    div.className = "joke";
+    div.innerHTML = '<span class="n">joke #' + j.n + ' · ' + j.cid.substring(0,12) + '...</span><br>' + j.joke;
+    el.appendChild(div);
+  }
+  if (manifest.count > 10) {
+    const more = document.createElement("div");
+    more.className = "loading";
+    more.textContent = `... ${manifest.count - 10} more jokes on IPFS`;
+    el.appendChild(more);
+  }
+}
+
+async function loadParties() {
+  const raw = await fetchFromIPFS(PARTY_CID);
+  const el = document.getElementById("parties");
+  if (!raw) { el.innerHTML = '<div class="error">could not reach IPFS gateways. run a local node and try ipfs cat ' + PARTY_CID + '</div>'; return; }
+  const manifest = JSON.parse(raw);
+  document.getElementById("party-count").textContent = manifest.count;
+  el.innerHTML = "";
+  for (const p of manifest.parties.slice(-10).reverse()) {
+    const div = document.createElement("div");
+    div.className = "party";
+    div.innerHTML = '<span class="name">🎉 ' + p.name + '</span><div class="theme">' + p.theme + '</div><div class="next">→ next: ' + p.next + '</div>';
+    el.appendChild(div);
+  }
+  if (manifest.count > 10) {
+    const more = document.createElement("div");
+    more.className = "loading";
+    more.textContent = `... ${manifest.count - 10} more parties on the chain`;
+    el.appendChild(more);
+  }
+}
+
+// Show self CID if accessed via IPFS gateway
+const url = window.location.href;
+if (url.includes("/ipfs/")) {
+  const cid = url.split("/ipfs/")[1].split("/")[0].split("?")[0];
+  document.getElementById("self-cid").textContent = "CID: " + cid;
+} else {
+  document.getElementById("self-cid").textContent = "not on IPFS yet — pin this page to spread the kingdom";
+}
+
+loadJokes();
+loadParties();
+</script>
+</body>
+</html>
