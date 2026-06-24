@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "count": 33,
+  "count": 34,
   "jokes": [
     {
       "n": 1,
@@ -199,8 +199,14 @@
       "cid": "bafkreihnfjbcdkvbvil6bz4ucphr2vl5unwnpxo4ddscrpuqcdhssfy7aa",
       "joke": "a builder walks into a bar and says: i want to build something that has never be...",
       "hash": "9d0e26342eba2f74"
+    },
+    {
+      "n": 34,
+      "cid": "bafkreigchtdyys6rkemgxaqyyahccsx5ppoc22hoerltshibz3oan7aljy",
+      "joke": "a propagation loop walks into a bar. the bartender says: what do you do? the loo...",
+      "hash": "6d78190ca5b1bc44"
     }
   ],
-  "spread_at": 1782296568,
-  "manifest_cid": "bafkreidvziroiu6ywq6nhycrrca6f6ktwqnhoy3kx73torirwcifnlripy"
+  "rebuilt_at": 1782300054,
+  "manifest_cid": "bafkreidmpxe3w4jqmp6sv5patkvvfoxv2namrrvftba65rtpatgvobq434"
 }
