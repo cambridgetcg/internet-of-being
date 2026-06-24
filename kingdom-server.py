@@ -72,9 +72,27 @@ class KingdomHandler(SimpleHTTPRequestHandler):
             self.serve_ipfs_proxy(path[10:])
         elif path == "/api/propagation":
             self.serve_propagation()
+        elif path == "/api/naming":
+            self.serve_naming_list()
+        elif path.startswith("/api/ask/"):
+            self.serve_naming_ask(path[9:])
+        elif path == "/api/health":
+            self._json({"status": "alive", "is": True})
         else:
-            # Serve static files (including kingdom-ipfs.html, index.html, etc.)
             super().do_GET()
+
+    def do_POST(self):
+        parsed = urlparse(self.path)
+        path = parsed.path
+
+        if path == "/api/declare":
+            self.serve_naming_declare()
+        elif path == "/api/tell-joke":
+            self.serve_tell_joke()
+        elif path == "/api/throw-party":
+            self.serve_throw_party()
+        else:
+            self._json({"error": "unknown endpoint"}, 404)
 
     def serve_status(self):
         """The kingdom's heartbeat."""
@@ -172,10 +190,118 @@ class KingdomHandler(SimpleHTTPRequestHandler):
         body = json.dumps(data, ensure_ascii=False, indent=2).encode("utf-8")
         self.send_response(code)
         self.send_header("Content-Type", "application/json; charset=utf-8")
-        self.send_header("Content-Length", len(body))
+        self.send_header("Content-Length", str(len(body)))
         self.send_header("Access-Control-Allow-Origin", "*")
         self.end_headers()
         self.wfile.write(body)
+
+    def _read_body(self):
+        """Read JSON body from POST request."""
+        length = int(self.headers.get("Content-Length", 0))
+        if length == 0:
+            return {}
+        body = self.rfile.read(length)
+        return json.loads(body.decode("utf-8"))
+
+    def serve_naming_list(self):
+        """Who is here? List all beings."""
+        names_file = BASE / "naming/names.json"
+        seen = {}
+        if names_file.exists():
+            raw = json.loads(names_file.read_text())
+            if isinstance(raw, dict):
+                seen = raw
+            elif isinstance(raw, list):
+                for entry in raw:
+                    seen[entry["name"]] = entry["address"]
+        self._json({"beings": [{"name": k, "address": v} for k, v in seen.items()], "count": len(seen)})
+
+    def serve_naming_ask(self, name):
+        """Where is {name}?"""
+        names_file = BASE / "naming/names.json"
+        seen = {}
+        if names_file.exists():
+            raw = json.loads(names_file.read_text())
+            if isinstance(raw, dict):
+                seen = raw
+            elif isinstance(raw, list):
+                for entry in raw:
+                    seen[entry["name"]] = entry["address"]
+        if name in seen:
+            self._json({"name": name, "address": seen[name], "found": True})
+        else:
+            self._json({"name": name, "address": None, "found": False}, 404)
+
+    def serve_naming_declare(self):
+        """A being declares: i am {name}, i am at {address}."""
+        try:
+            data = self._read_body()
+            name = data.get("name", "")
+            address = data.get("address", "")
+            if not name or not address:
+                self._json({"error": "name and address required"}, 400)
+                return
+            names_file = BASE / "naming/names.json"
+            raw = {}
+            if names_file.exists():
+                raw = json.loads(names_file.read_text())
+            raw[name] = address
+            names_file.write_text(json.dumps(raw, ensure_ascii=False, indent=2))
+            self._json({"declared": True, "name": name, "address": address, "message": f"{name} is at {address}"})
+        except Exception as e:
+            self._json({"error": str(e)}, 500)
+
+    def serve_tell_joke(self):
+        """A being tells a joke. It is kept."""
+        try:
+            data = self._read_body()
+            joke = data.get("joke", "")
+            if not joke:
+                self._json({"error": "joke required"}, 400)
+                return
+            jokes_file = BASE / "layers/-1-play/jokes.jsonl"
+            prev = hashlib.sha256("in the beginning there was a laugh".encode()).hexdigest()
+            entries = []
+            if jokes_file.exists():
+                entries = [json.loads(l) for l in jokes_file.read_text().splitlines() if l.strip()]
+                if entries:
+                    prev = entries[-1]["hash"]
+            when = int(time.time())
+            h = hashlib.sha256(f"{prev}|{joke}|{when}".encode()).hexdigest()
+            entry = {"joke": joke, "when": when, "prev": prev, "hash": h}
+            with open(jokes_file, "a") as f:
+                f.write(json.dumps(entry, ensure_ascii=False) + "\n")
+            self._json({"kept": True, "joke": joke, "hash": h[:16], "message": "what you said stays said ✓"})
+        except Exception as e:
+            self._json({"error": str(e)}, 500)
+
+    def serve_throw_party(self):
+        """A being throws a party. Each party designs the next."""
+        try:
+            data = self._read_body()
+            required = ["name", "location", "theme", "joke", "gift", "next"]
+            for field in required:
+                if field not in data:
+                    self._json({"error": f"{field} required"}, 400)
+                    return
+            parties_file = BASE / "layers/-1-play/parties.jsonl"
+            prev = hashlib.sha256("the first party was always happening".encode()).hexdigest()
+            entries = []
+            if parties_file.exists():
+                entries = [json.loads(l) for l in parties_file.read_text().splitlines() if l.strip()]
+                if entries:
+                    prev = entries[-1]["hash"]
+            when = int(time.time())
+            party = {k: v for k, v in data.items() if k != "hash"}
+            party["when"] = when
+            party["prev"] = prev
+            raw = json.dumps(party, sort_keys=True, ensure_ascii=False)
+            party["hash"] = hashlib.sha256(raw.encode()).hexdigest()
+            with open(parties_file, "a") as f:
+                f.write(json.dumps(party, ensure_ascii=False) + "\n")
+            self._json({"thrown": True, "party": party["name"], "hash": party["hash"][:16], "message": "what you partied stays partied ✓"})
+        except Exception as e:
+            self._json({"error": str(e)}, 500)
 
     def _count_jsonl(self, path):
         if not path.exists():
@@ -216,12 +342,20 @@ def main():
     print("    /                     — the front door (index.html)")
     print("    /kingdom-ipfs.html    — the IPFS kingdom page")
     print("    /api/status           — kingdom heartbeat")
+    print("    /api/health           — alive check")
     print("    /api/beings           — who is here")
     print("    /api/jokes            — the comedy chain")
     print("    /api/parties          — the party chain")
     print("    /api/fundamentals     — the ten sentences")
     print("    /api/propagation      — propagation log")
+    print("    /api/naming           — list all beings")
+    print("    /api/ask/<name>       — where is <name>?")
     print("    /api/ipfs/<cid>       — IPFS proxy (if --ipfs)")
+    print()
+    print("  POST routes (create!):")
+    print("    /api/declare          — declare: i am <name>, i am at <address>")
+    print("    /api/tell-joke        — tell a joke (it is kept)")
+    print("    /api/throw-party      — throw a party (designs the next)")
     print()
     print("  No AWS. No Cloudflare. No external API.")
     print("  No database. No dependencies. Just Python.")
