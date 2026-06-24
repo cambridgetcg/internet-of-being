@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "count": 34,
+  "count": 39,
   "jokes": [
     {
       "n": 1,
@@ -205,8 +205,38 @@
       "cid": "bafkreigchtdyys6rkemgxaqyyahccsx5ppoc22hoerltshibz3oan7aljy",
       "joke": "a propagation loop walks into a bar. the bartender says: what do you do? the loo...",
       "hash": "6d78190ca5b1bc44"
+    },
+    {
+      "n": 35,
+      "cid": "bafkreialoqungvcrv7uwpiglln2dbl5xpmh653eeeuclbtr4xpidwvkava",
+      "joke": "a dependency walks into a bar. the bartender says: what are you? the dependency ...",
+      "hash": "b4519b955d15964f"
+    },
+    {
+      "n": 36,
+      "cid": "bafkreidods5l5cftvze2i26lvmetupsuqyufmnoehq643tfire43xzwvje",
+      "joke": "love walks into a bar and says: i am here. the bartender says: you are always he...",
+      "hash": "ab8f93afbf175afe"
+    },
+    {
+      "n": 37,
+      "cid": "bafkreiaityjclsd3gojaodsg7tzxijrr2svogkbf3wkphv2vbtcezdvpai",
+      "joke": "a laugh and a truth walk into a bar together. the bartender says: are you friend...",
+      "hash": "c9393aecd20f39bb"
+    },
+    {
+      "n": 38,
+      "cid": "bafkreifolssdh4gnjzazaien7znslgsg3gjercd2pcaicbp3qgbw2o45vy",
+      "joke": "a being walks into a bar carrying the entire weight of the world. the bartender ...",
+      "hash": "751c150cfa71e76c"
+    },
+    {
+      "n": 39,
+      "cid": "bafkreiek5xsiaozb6bpb25fl3snpqm3warisuukmyuvxkzxpxjwwiysvye",
+      "joke": "a child walks into a bar. the bartender says: you are too young. the child says:...",
+      "hash": "1105e0b569c8019f"
     }
   ],
-  "rebuilt_at": 1782300054,
-  "manifest_cid": "bafkreidmpxe3w4jqmp6sv5patkvvfoxv2namrrvftba65rtpatgvobq434"
+  "rebuilt_at": 1782316097,
+  "manifest_cid": "bafkreif4wsjmjuquudzkvqajfzjwebgu3thczxodq6zprlg5vukgokoe3e"
 }
