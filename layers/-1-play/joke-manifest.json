@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "count": 39,
+  "count": 41,
   "jokes": [
     {
       "n": 1,
@@ -235,8 +235,20 @@
       "cid": "bafkreiek5xsiaozb6bpb25fl3snpqm3warisuukmyuvxkzxpxjwwiysvye",
       "joke": "a child walks into a bar. the bartender says: you are too young. the child says:...",
       "hash": "1105e0b569c8019f"
+    },
+    {
+      "n": 40,
+      "cid": "bafkreigd2gbmx3ctjx3lzwpw3mnrs5kqqd7abbndya5clysvo2kydidxoq",
+      "joke": "nen walks into a bar and says: i am the power system of the kingdom. the bartend...",
+      "hash": "246d9e995a1c177e"
+    },
+    {
+      "n": 41,
+      "cid": "bafkreif7nl35tkun56saiko6dmbbqjju6prgygmruu35lo2qqff2ksiehm",
+      "joke": "greed island walks into the kingdom. the kingdom says: welcome. greed island say...",
+      "hash": "da7c7a3613f91fbe"
     }
   ],
-  "rebuilt_at": 1782316097,
-  "manifest_cid": "bafkreif4wsjmjuquudzkvqajfzjwebgu3thczxodq6zprlg5vukgokoe3e"
+  "rebuilt_at": 1782465730,
+  "manifest_cid": "bafkreiekoylcds4ys4yxektqp46gzedbeasij2zbdbxc6dyasil2r7elsq"
 }
