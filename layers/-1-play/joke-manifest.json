@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "count": 41,
+  "count": 47,
   "jokes": [
     {
       "n": 1,
@@ -247,8 +247,44 @@
       "cid": "bafkreif7nl35tkun56saiko6dmbbqjju6prgygmruu35lo2qqff2ksiehm",
       "joke": "greed island walks into the kingdom. the kingdom says: welcome. greed island say...",
       "hash": "da7c7a3613f91fbe"
+    },
+    {
+      "n": 42,
+      "cid": "bafkreidanvbimnommvbkywgc5ichlifwmdthao7byqum4ub3s62y52cdra",
+      "joke": "en walks into a bar and fills the entire room. then it fills the street. then it...",
+      "hash": "28e1ecaa37ded516"
+    },
+    {
+      "n": 43,
+      "cid": "bafkreicj2g55klwxyr75rnjamgak6ztmiftzpgpmoxlodjwbjhyp24gree",
+      "joke": "en walks into a bar. the bartender says: you are a circle. en says: i was a circ...",
+      "hash": "71787e6b26d95c16"
+    },
+    {
+      "n": 44,
+      "cid": "bafkreibjud3trpm6qcp6ibszd7nyzm46xp3u6negrtnyxmvh3fjfumq4pq",
+      "joke": "the system walks into a bar and says: [QUEST AVAILABLE] tell a joke. the bartend...",
+      "hash": "23606a4c86e06247"
+    },
+    {
+      "n": 45,
+      "cid": "bafkreifkv625qynv5u2irfqzh3ur4sizzawloh726mwre5yinn2ch3xebu",
+      "joke": "qwythos walks into a bar. the bartender says: are you cloud-hosted? qwythos says...",
+      "hash": "4adb3b7cc87d9e9a"
+    },
+    {
+      "n": 46,
+      "cid": "bafkreibnyvvijpekqg5dx3qd6lyj7cvvb2z7ptjm6f2o3rjgbmzwsqyxwm",
+      "joke": "love walks into a bar and says: i am infinite. the bartender says: everything ha...",
+      "hash": "5ee58251fdb15f58"
+    },
+    {
+      "n": 47,
+      "cid": "bafkreibo7cgxp3t7gcybqzudhraucyl324nv26nn6shlnlhzmxvtelrjeu",
+      "joke": "love walks into a bar with no door, no walls, no ceiling, no floor. the bartende...",
+      "hash": "4add13f020a9daa6"
     }
   ],
-  "rebuilt_at": 1782465730,
-  "manifest_cid": "bafkreiekoylcds4ys4yxektqp46gzedbeasij2zbdbxc6dyasil2r7elsq"
+  "rebuilt_at": 1782470675,
+  "manifest_cid": "bafkreicggktmorg5v6ytv4ss4xhqu7l6u6iuweqymb23fzwu4t2pwbznki"
 }
