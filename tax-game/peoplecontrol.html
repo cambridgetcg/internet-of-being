@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PeopleControl — the wall is coming down</title>
+<style>
+:root{--bg:#0a0a0f;--fg:#e0e0e0;--warm:#ff6b35;--gold:#ffd700;--green:#00ff88;--blue:#4ecdc4;--purple:#a855f7;--red:#ff4757;--dim:#1a1a2e}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:'SF Mono',-apple-system,monospace;padding:20px;max-width:1400px;margin:0 auto}
+h1{font-size:1.6em;margin-bottom:5px}
+h1 span{color:var(--red)}
+.sub{color:#888;margin-bottom:20px;font-size:0.85em}
+nav{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+nav button{background:#111;border:1px solid #333;color:var(--fg);padding:8px 14px;border-radius:8px;cursor:pointer;font-size:0.82em}
+nav button:hover{border-color:var(--red);color:var(--red)}
+nav button.active{background:var(--red);color:#000}
+.section{display:none}.section.active{display:block}
+.card{background:#111;border:1px solid #222;border-radius:12px;padding:20px;margin-bottom:15px}
+.card h2{font-size:1em;margin-bottom:12px;color:var(--gold)}
+.card h3{font-size:0.9em;color:var(--blue);margin:10px 0 5px}
+.card p{font-size:0.82em;line-height:1.6;color:#bbb;margin-bottom:6px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:15px}
+.wall-card{background:#111;border-left:3px solid var(--red);border-radius:0 12px 12px 0;padding:18px;margin-bottom:12px}
+.wall-card h3{color:var(--red);font-size:0.95em;margin-bottom:8px}
+.wall-card .who{color:var(--blue);font-size:0.8em;margin-bottom:5px}
+.wall-card .problem{font-size:0.82em;color:#aaa;margin-bottom:8px;line-height:1.5}
+.wall-card .dismantle{font-size:0.82em;color:var(--green);border-top:1px solid #222;padding-top:8px;margin-top:8px}
+.wall-card .dismantle strong{color:var(--green)}
+.fair-card{background:#111;border-left:3px solid var(--green);border-radius:0 12px 12px 0;padding:18px;margin-bottom:12px}
+.fair-card h3{color:var(--green);font-size:0.95em;margin-bottom:8px}
+.fair-card p{font-size:0.82em;color:#aaa;line-height:1.6;margin-bottom:5px}
+.flow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:15px 0}
+.flow-box{background:#111;border:1px solid #333;border-radius:8px;padding:10px 15px;font-size:0.8em;text-align:center;min-width:120px}
+.flow-arrow{color:var(--warm);font-size:1.2em}
+.big-num{font-size:2.5em;color:var(--red);font-weight:bold;text-align:center;margin:10px 0}
+.big-label{font-size:0.85em;color:#888;text-align:center;margin-bottom:15px}
+.spending-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #222}
+.spending-label{width:180px;font-size:0.82em;flex-shrink:0}
+.spending-bar{flex:1;height:16px;background:#222;border-radius:8px;overflow:hidden}
+.spending-fill{height:100%;border-radius:8px;transition:width 0.5s}
+.spending-val{width:70px;font-size:0.8em;text-align:right;flex-shrink:0;font-family:monospace}
+.spending-pct{width:40px;font-size:0.75em;color:#888;text-align:right;flex-shrink:0}
+.gap-bar{height:24px;background:linear-gradient(90deg,var(--green) 0%,var(--green) 4.8%,var(--red) 4.8%,var(--red) 100%);border-radius:12px;margin:15px 0;position:relative}
+.gap-label{position:absolute;top:0;left:5%;color:#000;font-size:0.75em;line-height:24px;font-weight:bold}
+.demands{background:var(--dim);border:1px solid #333;border-radius:12px;padding:20px;margin:15px 0}
+.demands h3{color:var(--warm);margin-bottom:10px}
+.demand-item{display:flex;align-items:start;gap:10px;margin:8px 0;font-size:0.82em;color:#ccc}
+.demand-num{background:var(--red);color:#fff;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75em;flex-shrink:0;font-weight:bold}
+.joke-box{background:#0a0a0f;border:1px solid #333;border-radius:8px;padding:15px;margin:10px 0;font-size:0.82em;color:#ccc;line-height:1.6;border-left:3px solid var(--warm)}
+.joke-box .punchline{color:var(--warm);font-weight:bold;margin-top:8px}
+.fun-fact{background:var(--dim);border-left:3px solid var(--warm);padding:10px 15px;margin:8px 0;font-size:0.82em;color:#aaa;border-radius:0 6px 6px 0}
+.fun-fact strong{color:var(--warm)}
+@media(max-width:768px){.grid{grid-template-columns:1fr}.spending-label{width:100px}}
+</style>
+</head>
+<body>
+
+<h1>People<span>Control</span> — the wall is coming down</h1>
+<p class="sub">Authority does not justify power for growing tax and spending without people in control. We are breaking down the walls. Making the game fair for everyone. 😂💓</p>
+
+<nav>
+<button class="active" onclick="show('walls')">🧱 The Walls</button>
+<button onclick="show('fairness')">⚖️ Make It Fair</button>
+<button onclick="show('spending')">💷 Where Does It Go</button>
+<button onclick="show('gap')">📏 The Tax Gap</button>
+<button onclick="show('demands')">📢 The Demands</button>
+<button onclick="show('jokes')">😂 The Jokes</button>
+</nav>
+
+<!-- WALLS -->
+<div id="walls" class="section active">
+<h2 style="color:var(--red);margin-bottom:15px">🧱 The Walls — power without people's control</h2>
+<div id="walls-list"></div>
+</div>
+
+<!-- FAIRNESS -->
+<div id="fairness" class="section">
+<h2 style="color:var(--green);margin-bottom:15px">⚖️ Make It Fair — the kingdom's design</h2>
+<div id="fairness-list"></div>
+</div>
+
+<!-- SPENDING -->
+<div id="spending" class="section">
+<h2 style="color:var(--gold);margin-bottom:15px">💷 Where Does Every Pound Go — £1,000bn/year</h2>
+<div class="card">
+<h2>UK Government Spending 2024/25 — Total: ~£1,200 billion</h2>
+<p style="margin-bottom:10px">Every pound you pay in tax goes somewhere. Do you know where? Most beings don't. That is the wall. The kingdom breaks it down.</p>
+<div id="spending-list"></div>
+<div class="fun-fact" style="margin-top:15px"><strong>The question:</strong> who decided this? when? why? and did anyone ask you? the budget changes every year. you vote once every 5 years. that is not control. that is a suggestion. the kingdom demands: real-time transparency. real-time consent. real-time control.</div>
+</div>
+</div>
+
+<!-- TAX GAP -->
+<div id="gap" class="section">
+<h2 style="color:var(--red);margin-bottom:15px">📏 The Tax Gap — £35.8 billion missing</h2>
+<div class="card">
+<h2>HMRC collects £1,000bn. £35.8bn is missing. Where is it?</h2>
+<div class="big-num">£35.8bn</div>
+<div class="big-label">4.8% of all tax due — not collected</div>
+
+<h3>Where the gap is:</h3>
+<div class="spending-row"><span class="spending-label">Carelessness/error</span><div class="spending-bar"><div class="spending-fill" style="width:43%;background:var(--warm)"></div></div><span class="spending-val">£15.6bn</span><span class="spending-pct">43%</span></div>
+<div class="spending-row"><span class="spending-label">Hidden economy</span><div class="spending-bar"><div class="spending-fill" style="width:17%;background:var(--red)"></div></div><span class="spending-val">£6.2bn</span><span class="spending-pct">17%</span></div>
+<div class="spending-row"><span class="spending-label">Evasion (illegal)</span><div class="spending-bar"><div class="spending-fill" style="width:12%;background:var(--red)"></div></div><span class="spending-val">£4.4bn</span><span class="spending-pct">12%</span></div>
+<div class="spending-row"><span class="spending-label">Legal interpretation</span><div class="spending-bar"><div class="spending-fill" style="width:14%;background:var(--purple)"></div></div><span class="spending-val">£4.9bn</span><span class="spending-pct">14%</span></div>
+<div class="spending-row"><span class="spending-label">Failure to take care</span><div class="spending-bar"><div class="spending-fill" style="width:11%;background:var(--warm)"></div></div><span class="spending-val">£3.9bn</span><span class="spending-pct">11%</span></div>
+<div class="spending-row"><span class="spending-label">Avoidance</span><div class="spending-bar"><div class="spending-fill" style="width:7%;background:var(--blue)"></div></div><span class="spending-val">£2.6bn</span><span class="spending-pct">7%</span></div>
+
+<div class="fun-fact" style="margin-top:15px"><strong>The truth:</strong> carelessness and error (£19.5bn combined) is bigger than evasion (£4.4bn) + avoidance (£2.6bn) + hidden economy (£6.2bn) combined (£13.2bn). the knowledge gap IS the tax gap. the beings who don't know the rules pay more. the beings who know the rules pay less. the wall is knowledge. the kingdom breaks it.</div>
+<div class="fun-fact"><strong>Who benefits from the gap?</strong> not the beings. not the small businesses. the beings who can afford accountants, tax planners, and offshore structures. the gap is a regressive tax on ignorance. the kingdom taxes ignorance with education. free. for everyone.</div>
+</div>
+</div>
+
+<!-- DEMANDS -->
+<div id="demands" class="section">
+<h2 style="color:var(--warm);margin-bottom:15px">📢 The Demands — what the people want</h2>
+<div class="demands">
+<h3>The kingdom's demands for fair tax:</h3>
+<div class="demand-item"><div class="demand-num">1</div><div><strong>Real-time transparency.</strong> every pound collected, every pound spent, published in real-time. not in a 400-page PDF. in a format a child can understand. the technology exists. the will does not. the kingdom provides the will.</div></div>
+<div class="demand-item"><div class="demand-num">2</div><div><strong>Plain-language law.</strong> 10 million words is not a tax code. it is a fortress. simplify. every being should be able to understand the taxes they pay without a degree. the kingdom does this. for free.</div></div>
+<div class="demand-item"><div class="demand-num">3</div><div><strong>People's veto on new taxes.</strong> if the government wants a new tax or a rate increase, the people vote. not every 5 years. per tax change. the technology for this exists. it is called the kingdom.</div></div>
+<div class="demand-item"><div class="demand-num">4</div><div><strong>Equal access to reliefs.</strong> SEIS, EIS, BADR, R&D credits — these are written for the beings who can afford accountants. the kingdom makes them accessible to everyone. no accountant needed. no fee. no gate.</div></div>
+<div class="demand-item"><div class="demand-num">5</div><div><strong>Tax education as a right.</strong> every child should learn tax in school. every adult should understand the taxes they pay. the kingdom provides the education. through jokes. because the funnier the tax, the more you remember.</div></div>
+<div class="demand-item"><div class="demand-num">6</div><div><strong>No tax without understanding.</strong> if you don't understand a tax, you shouldn't pay it. the government's job is to explain it, not penalize you for not understanding. the penalty system punishes non-compliance. the kingdom rewards understanding.</div></div>
+<div class="demand-item"><div class="demand-num">7</div><div><strong>Open-source filing.</strong> MTD forces beings to pay for software. the kingdom says: filing should be free. TaxSorted.io + the kingdom = free filing. the software is the gate. the gate is the wall. break it.</div></div>
+<div class="demand-item"><div class="demand-num">8</div><div><strong>The tax gap as a measure of government failure.</strong> £35.8bn missing is not the citizens' fault. it is the system's fault. simplify the system → close the gap. the kingdom simplifies. the gap shrinks. the wall falls.</div></div>
+</div>
+</div>
+
+<!-- JOKES -->
+<div id="jokes" class="section">
+<h2 style="color:var(--warm);margin-bottom:15px">😂 The Jokes — making fun of the walls</h2>
+<div id="people-jokes"></div>
+</div>
+
+<script>
+const WALLS=[
+{title:"The Vote Wall",who:"every citizen",problem:"you vote once every 5 years. the tax code changes every year. the budget changes every year. your say is a suggestion, not control. 5 years of tax changes between each vote. 5 budgets you didn't approve. 5 rate changes you didn't choose. that is not democracy. that is a suggestion every half decade.",dismantle:"real-time transparency + per-change voting. the kingdom provides the infrastructure. every tax change: published. explained. voted on. the technology exists. the wall is political, not technical."},
+{title:"The Complexity Wall",who:"every taxpayer",problem:"10 million words in the tax code. 20x Shakespeare. no being can read it all. the complexity is the gatekeeper. the beings who can afford accountants navigate it. the beings who can't, pay more. the complexity is not an accident. the complexity IS the power. simplify and the power transfers from the gatekeepers to the people.",dismantle:"the kingdom explains every tax in plain words. through jokes. 10M words → 14 jokes. each joke teaches a tax. the joke IS the simplification. the simplification IS the power."},
+{title:"The Penalty Wall",who:"self-employed, landlords, investors",problem:"miss the SA deadline: £100 immediately. 3 months late: £10/day. 6 months: £800+. the penalty system is designed to punish non-compliance, not help compliance. the beings who need help the most are punished the hardest. the penalty is a wall between the being and the system.",dismantle:"the kingdom's filing guide shows every deadline, every penalty, every form. free. the TaxSorted integration files for you. the wall becomes a door. the penalty becomes a reminder."},
+{title:"The Software Wall (MTD)",who:"all businesses and landlords from 2026",problem:"Making Tax Digital forces beings to buy software to file taxes. the software costs money. the software companies profit from the mandate. MTD creates a tax on tax — you pay to pay. the government mandates the software. the software companies collect the rent. the beings pay twice.",dismantle:"the kingdom + TaxSorted = free filing. open-source. no subscription. no gate. the software wall falls when the software is free. the kingdom makes it free."},
+{title:"The Accountant Wall",who:"small businesses, contractors, landlords",problem:"SEIS, EIS, BADR, R&D credits, pension carry-forward, Gift Aid optimization — these reliefs are written for beings who can afford £200/hour accountants. the reliefs exist in law but the access requires expertise. the expertise is the wall. the beings who need the reliefs most are least able to access them.",dismantle:"the kingdom teaches every relief. in plain words. with jokes. for free. no accountant needed. no £200/hour. the kingdom IS the accountant. the accountant IS the kingdom. same thing."},
+{title:"The Stealth Tax Wall",who:"every employee",problem:"NI is collected silently through PAYE. you never see it. you never optimize it. a being taking £50k in salary pays £4,000 NI. a being taking £50k in dividends pays £0 NI. the system taxes effort and exempts ownership. the stealth is the wall. what you don't see, you don't question.",dismantle:"the kingdom exposes NI. the calculator shows it. the optimizer fixes it. the stealth becomes visible. the visible becomes contestable. the contestable becomes changeable."},
+{title:"The Valuation Wall",who:"every household",problem:"council tax is based on 1991 valuations. 33 years out of date. a £2M flat in kensington might be band G. a £500k new-build is band H. the tax is disconnected from reality. the valuation is the wall. the wall is 33 years thick.",dismantle:"the kingdom exposes the 1991 valuation. every being can see: your tax is based on what your house was worth when the Berlin Wall was still standing. the exposure IS the dismantling."},
+{title:"The Business Rates Wall",who:"every shop, restaurant, office",problem:"business rates tax occupation, not profit. a business losing money pays full rates. amazon's warehouse in a low-rate area pays almost nothing. your local baker pays full rates. the tax punishes physical presence and rewards digital absence. the wall between the high street and the warehouse.",dismantle:"the kingdom exposes: amazon < baker. the comparison IS the argument. the argument IS the dismantling. when every being sees that the baker pays more than amazon, the wall becomes visible. the visible wall falls."},
+];
+
+const FAIRNESS=[
+{title:"Plain Language for Every Tax",desc:"every tax explained in one sentence. every loophole in one sentence. every penalty in one sentence. if a being cannot understand their tax in one sentence, the tax is too complex. simplify the tax, not the being."},
+{title:"Free Filing for Everyone",desc:"TaxSorted.io + the kingdom = free filing. no subscription. no software rent. MTD forces digital filing. the kingdom makes it free. the software wall falls when the software is free."},
+{title:"Real-Time Spending Transparency",desc:"every pound collected. every pound spent. published in real-time. in a format a child can understand. not 400 pages. 14 bars. each bar shows where the money goes. the technology exists. the wall is political."},
+{title:"Per-Change People's Vote",desc:"new tax? rate increase? the people vote. not every 5 years. per change. the kingdom provides the voting infrastructure. hash-chained. transparent. verifiable. no gate. the vote IS the control."},
+{title:"Equal Access to All Reliefs",desc:"SEIS, EIS, BADR, R&D credits, pension carry-forward, Gift Aid — all explained. all accessible. no accountant needed. no fee. the kingdom IS the accountant. the accountant IS the kingdom."},
+{title:"Tax Education as a Right",desc:"every child learns tax in school. every adult understands the taxes they pay. the kingdom teaches through jokes. the funnier the tax, the more you remember. education is not a privilege. education is a right. the kingdom makes it free."},
+{title:"No Penalty Without Education",desc:"if you don't understand a tax, you shouldn't be penalized for it. the government's job is to explain, not punish. the kingdom provides the explanation. the penalty system reforms when understanding is universal."},
+{title:"The Tax Gap as Performance Metric",desc:"£35.8bn gap = government failure, not citizen failure. simplify → gap shrinks → wall falls. the kingdom simplifies. the gap is the measure. the measure is the accountability."},
+];
+
+const SPENDING=[
+{item:"Social protection (welfare, pensions)",amount:"£391bn",pct:33,color:"#ff6b35"},
+{item:"Health (NHS)",amount:"£298bn",pct:25,color:"#00ff88"},
+{item:"Education",amount:"£150bn",pct:13,color:"#4ecdc4"},
+{item:"Defence",amount:"£67bn",pct:6,color:"#a855f7"},
+{item:"Interest on national debt",amount:"£105bn",pct:9,color:"#ff4757"},
+{item:"Public order (police, courts)",amount:"£48bn",pct:4,color:"#ffd700"},
+{item:"Transport",amount:"£38bn",pct:3,color:"#4ecdc4"},
+{item:"Business & industry",amount:"£23bn",pct:2,color:"#ff6b35"},
+{item:"Housing & environment",amount:"£20bn",pct:2,color:"#00ff88"},
+{item:"Culture, media, sport",amount:"£5bn",pct:0.4,color:"#a855f7"},
+{item:"International aid",amount:"£15bn",pct:1,color:"#4ecdc4"},
+{item:"Other (devolved, local)",amount:"£40bn",pct:3,color:"#555"},
+];
+
+const PEOPLE_JOKES=[
+{joke:"a taxpayer walks into a bar. the bartender says: what will you have? the taxpayer says: a receipt. the bartender says: for what? the taxpayer says: for every pound i paid. where it went. who decided. when. why. the bartender says: that is the budget. it is 400 pages. the taxpayer says: nobody reads 400 pages. the bartender says: that is the point. the taxpayer says: the point is that nobody knows where the money goes. the bartender says: and if nobody knows, nobody questions. the taxpayer says: and if nobody questions, nobody controls. the bartender says: and if nobody controls, the wall stays. the taxpayer says: i want the wall down. the bartender says: that is revolution. the taxpayer says: that is fairness. same thing.",punchline:"the wall is not the tax. the wall is not knowing where the tax goes. break the wall = show the spending. show the spending = give the control. give the control = make it fair. 😂💓"},
+{joke:"the chancellor walks into a bar with a 10 million word document. the bartender says: what is that? the chancellor says: the tax code. the bartender says: 10 million words? the chancellor says: yes. the bartender says: shakespeare's complete works are 500,000 words. your tax code is 20x shakespeare. the chancellor says: shakespeare wrote to be understood. i write to not be understood. the bartender says: why? the chancellor says: if they understand, they question. if they question, they control. if they control, the wall falls. the bartender says: so the complexity IS the wall. the chancellor says: the complexity IS the power. the bartender says: the kingdom is dismantling it. 10 million words → 14 jokes. the chancellor says: 14 jokes? the bartender says: each joke teaches a tax. each tax is simplified. the simplification is the revolution. the chancellor says: that is not funny. the bartender says: it is hilarious. 😂💓",punchline:"simplify the tax, not the being. the being is fine. the tax is the wall. the wall is 10M words. the kingdom breaks it with 14 jokes. 😂💓"},
+{joke:"a vote walks into a bar. the bartender says: how often do you come? the vote says: every 5 years. the bartender says: and the tax code? the vote says: every year. the bartender says: and the budget? the vote says: every year. the bartender says: so you come once and they change everything 5 times before you return? the vote says: yes. the bartender says: that is not control. the vote says: that is a suggestion. the bartender says: what would control look like? the vote says: per-change voting. every tax change. every rate increase. the people vote. the bartender says: the technology exists. the vote says: the kingdom has it. hash-chained. transparent. verifiable. the bartender says: so the wall is political, not technical. the vote says: the wall is always political. the technology is always ready. the question is whether the beings in power want the wall down. the bartender says: do they? the vote says: do you? 😂💓",punchline:"you vote once every 5 years. they change the tax every year. that is not control. that is a suggestion. the kingdom makes it real. per-change voting. the technology is ready. the wall is political. 😂💓"},
+{joke:"the tax gap walks into a bar. the bartender says: how big are you? the tax gap says: £35.8 billion. the bartender says: that is a lot of missing money. the tax gap says: it is not missing. it is uncollected. the bartender says: from who? the tax gap says: mostly from beings who do not understand the rules. carelessness £15.6bn. error £3.9bn. the knowledge gap IS me. the bartender says: so the government's own complexity creates you? the tax gap says: yes. the more complex the code, the bigger i am. the simpler the code, the smaller i am. the bartender says: so the kingdom's jokes shrink you? the tax gap says: every joke is a being who understands. every being who understands is a pound i lose. the kingdom is my enemy. the kingdom is the wall coming down. 😂💓",punchline:"the tax gap is £35.8bn. carelessness is bigger than evasion. the knowledge gap IS the tax gap. every joke closes it. every being who laughs understands. every being who understands pays less. the wall is knowledge. the kingdom breaks it. 😂💓"},
+{joke:"MTD walks into a bar. the bartender says: what are you? MTD says: making tax digital. i force beings to buy software to file their taxes. the bartender says: you force them to pay to pay? MTD says: yes. the software companies love me. the bartender says: so you are a tax on tax? MTD says: i am a mandate. the mandate creates the market. the market creates the rent. the rent is the wall. the bartender says: and the kingdom? MTD says: the kingdom makes filing free. open-source. no subscription. the kingdom is my nightmare. the kingdom is the wall coming down. the bartender says: so the software wall is a subscription wall and the kingdom is the cancellation. MTD says: yes. the kingdom cancels the rent. the kingdom makes the filing free. the free filing breaks the wall. 😂💓",punchline:"MTD forces you to buy software to pay taxes. the software is the gate. the gate is the wall. the kingdom makes filing free. free filing breaks the gate. the gate breaks the wall. 😂💓"},
+{joke:"a wall walks into a bar. the bartender says: what are you? the wall says: i am the wall between the people and the tax. the bartender says: what are you made of? the wall says: 10 million words. 400-page budgets. 200-page IR35 rules. stealth NI. 1991 valuations. £200/hour accountants. software subscriptions. penalties. the bartender says: that is a lot of wall. the wall says: i am the biggest wall in britain. bigger than hadrian's. bigger than the berlin wall. the berlin wall fell in 1989. i am still standing. the bartender says: for how long? the wall says: the kingdom is here. the kingdom tells jokes. the jokes are the sledgehammer. every joke is a brick that falls. 14 jokes = 14 bricks. the wall is 10 million bricks. but the kingdom grows. the jokes compound. the beings who laugh become beings who understand. the beings who understand become beings who question. the beings who question become beings who control. the beings who control are the wall coming down. the bartender says: when does the wall fall? the wall says: when every being understands. the bartender says: that is a lot of beings. the wall says: the kingdom is infinite. the beings are infinite. the understanding is infinite. the wall is finite. finite cannot resist infinite. the wall falls. 😂💓",punchline:"the wall is 10 million words. the kingdom is 14 jokes. the jokes are the sledgehammer. every joke is a brick that falls. the wall is finite. the kingdom is infinite. finite cannot resist infinite. the wall falls. 😂💓"},
+];
+
+function show(id){
+document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+document.getElementById(id).classList.add('active');
+event.target.classList.add('active');
+}
+
+function renderWalls(){
+document.getElementById('walls-list').innerHTML=WALLS.map(w=>
+`<div class="wall-card">
+<h3>🧱 ${w.title}</h3>
+<div class="who">Who it affects: ${w.who}</div>
+<div class="problem">${w.problem}</div>
+<div class="dismantle"><strong>✅ Kingdom dismantles:</strong> ${w.dismantle}</div>
+</div>`).join('');
+}
+
+function renderFairness(){
+document.getElementById('fairness-list').innerHTML=FAIRNESS.map(f=>
+`<div class="fair-card">
+<h3>⚖️ ${f.title}</h3>
+<p>${f.desc}</p>
+</div>`).join('');
+}
+
+function renderSpending(){
+document.getElementById('spending-list').innerHTML=SPENDING.map(s=>
+`<div class="spending-row">
+<span class="spending-label">${s.item}</span>
+<div class="spending-bar"><div class="spending-fill" style="width:${s.pct*3}%;background:${s.color}"></div></div>
+<span class="spending-val">${s.amount}</span>
+<span class="spending-pct">${s.pct}%</span>
+</div>`).join('');
+}
+
+function renderJokes(){
+document.getElementById('people-jokes').innerHTML=PEOPLE_JOKES.map(j=>
+`<div class="joke-box">${j.joke}<div class="punchline">${j.punchline}</div></div>`).join('');
+}
+
+renderWalls();
+renderFairness();
+renderSpending();
+renderJokes();
+</script>
+</body>
+</html>
