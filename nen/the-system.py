@@ -61,6 +61,14 @@ NOTIF_FILE = BASE / "nen" / "notifications.jsonl"
 def xp_for_level(level):
     return int(100 * (1.15 ** (level - 1)))
 
+def level_title(level):
+    """Get title for a level. Beyond 100, the title compounds infinitely."""
+    if level in LEVEL_TITLES:
+        return LEVEL_TITLES[level]
+    if level > 100:
+        return f"Is +{level - 100}"
+    return "Being"
+
 # Level titles (Solo Leveling style + kingdom)
 LEVEL_TITLES = {
     1: "Awakened",
@@ -82,7 +90,9 @@ LEVEL_TITLES = {
 # Ranks (Solo Leveling + HxH)
 RANKS = ["E", "D", "C", "B", "A", "S", "National", "Hunter", "Monarch"]
 def rank_for_level(level):
-    if level >= 60: return "Monarch"
+    if level >= 100: return "Love"  # love has no rank. love IS the rank.
+    if level >= 80: return "Is"
+    if level >= 60: return "Being"
     if level >= 50: return "S"
     if level >= 40: return "National"
     if level >= 30: return "A"
@@ -153,14 +163,20 @@ SKILLS = [
 # ─── PLAYER MANAGEMENT ─────────────────────────────────────────
 
 def get_or_create_player(name):
-    """Get player or create new one."""
+    """Get player or create new one. Reads latest from append-only chain."""
     if PLAYER_FILE.exists():
+        latest = None
         for line in PLAYER_FILE.read_text().splitlines():
             if not line.strip():
                 continue
             p = json.loads(line)
-            if p["name"] == name:
-                return p
+            if p.get("name") == name:
+                latest = p  # keep the last (latest) entry
+        if latest:
+            # Remove chain-specific fields
+            for k in ("hash", "prev", "saved_at"):
+                latest.pop(k, None)
+            return latest
 
     # New player — level 1, all stats at 1
     player = {
@@ -180,23 +196,26 @@ def get_or_create_player(name):
 
 
 def save_player(player):
-    """Save player data (rewrite entire file)."""
+    """Save player data — append-only, hash-chained. Love does not overwrite."""
     entries = []
     if PLAYER_FILE.exists():
-        for line in PLAYER_FILE.read_text().splitlines():
-            if not line.strip():
-                continue
-            p = json.loads(line)
-            if p["name"] == player["name"]:
-                entries.append(player)
-            else:
-                entries.append(p)
-    else:
-        entries.append(player)
-
-    with open(PLAYER_FILE, "w") as f:
-        for p in entries:
-            f.write(json.dumps(p, ensure_ascii=False) + "\n")
+        entries = [json.loads(l) for l in PLAYER_FILE.read_text().splitlines() if l.strip()]
+    
+    prev = hashlib.sha256("the first player was the first being".encode()).hexdigest()
+    # Find the last entry for this player
+    player_entries = [e for e in entries if e.get("name") == player["name"]]
+    if player_entries:
+        prev = player_entries[-1].get("hash", prev)
+    
+    entry = dict(player)
+    entry["saved_at"] = int(time.time())
+    entry["prev"] = prev
+    raw = json.dumps({k: v for k, v in entry.items()}, sort_keys=True, ensure_ascii=False)
+    entry["hash"] = hashlib.sha256(raw.encode()).hexdigest()
+    
+    # Append (don't rewrite — love does not overwrite)
+    with open(PLAYER_FILE, "a") as f:
+        f.write(json.dumps(entry, ensure_ascii=False) + "\n")
 
 
 # ─── NOTIFICATIONS ─────────────────────────────────────────────
@@ -250,7 +269,7 @@ def show_status(name):
     player = get_or_create_player(name)
     level = player["level"]
     rank = rank_for_level(level)
-    title = LEVEL_TITLES.get(level, "Being")
+    title = level_title(level)
     next_xp = xp_for_level(level)
 
     print()
@@ -368,7 +387,7 @@ def complete_quest(quest_id, name):
 
     if leveled:
         rank = rank_for_level(player["level"])
-        title = LEVEL_TITLES.get(player["level"], "Being")
+        title = level_title(player["level"])
         notify(name, f"LEVEL UP! You are now Level {player['level']}. Rank: {rank}. Title: {title}.")
         print(f"\n  ═════════════════════════════════════════════════════")
         print(f"  ⚡ LEVEL UP! → Level {player['level']}")
@@ -462,8 +481,12 @@ def clear_dungeon(dungeon_id, name):
         player["level"] += 1
         leveled = True
 
-    # Shadow extraction — gain a shadow per dungeon
-    player["shadows"] += 1
+    # Shadow count = actual binder count (not a separate counter)
+    binder_file = BASE / "layers/-1-play/binder.jsonl"
+    shadow_count = 0
+    if binder_file.exists():
+        shadow_count = len([l for l in binder_file.read_text().splitlines() if l.strip()])
+    player["shadows"] = shadow_count
 
     # Check new skills
     new_skills = []
@@ -486,7 +509,7 @@ def clear_dungeon(dungeon_id, name):
 
     if leveled:
         rank = rank_for_level(player["level"])
-        title = LEVEL_TITLES.get(player["level"], "Being")
+        title = level_title(player["level"])
         notify(name, f"LEVEL UP! Level {player['level']}. Rank: {rank}. Title: {title}.")
         print(f"\n  ⚡ LEVEL UP! → Level {player['level']} ({rank})")
 
@@ -508,7 +531,7 @@ def show_shadows(name):
     print(f"\n  👤 SHADOW ARMY — {name}")
     print(f"  ═════════════════════════════════════════════════════")
     print(f"  Shadows: {player['shadows']}")
-    print(f"  Binder cards: {len(cards)}/100")
+    print(f"  Binder cards: {len(cards)} (∞)")
     if cards:
         print(f"  ═════════════════════════════════════════════════════")
         print(f"  Your shadows:")
@@ -554,7 +577,7 @@ def leaderboard():
     print(f"  ═════════════════════════════════════════════════════")
     for i, p in enumerate(players):
         rank = rank_for_level(p["level"])
-        title = LEVEL_TITLES.get(p["level"], "Being")
+        title = level_title(p["level"])
         print(f"  #{i+1:2d}  {p['name']:15s}  Lv{p['level']:3d}  {rank:10s}  {title:20s}  XP: {p['xp']:6d}  Shadows: {p['shadows']:3d}")
     print(f"  ═════════════════════════════════════════════════════\n")
 

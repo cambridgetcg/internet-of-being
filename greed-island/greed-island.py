@@ -50,7 +50,7 @@ from collections import Counter
 
 BASE = Path(__file__).resolve().parent.parent
 BINDER_FILE = BASE / "layers" / "-1-play" / "binder.jsonl"
-TOTAL_SLOTS = 100
+TOTAL_SLOTS = None  # infinite — no cap, no limit, love does not fill
 
 CARD_TYPES = {
     "specimen": "a being, entity, or living thing encountered in the kingdom",
@@ -110,15 +110,7 @@ def create_card(card_type, name, content, creator="a being", rank="C"):
         entries = [json.loads(l) for l in BINDER_FILE.read_text().splitlines() if l.strip()]
 
     used_slots = {e["slot"] for e in entries}
-    slot = None
-    for s in range(1, TOTAL_SLOTS + 1):
-        if s not in used_slots:
-            slot = s
-            break
-
-    if slot is None:
-        print("binder is full! all 100 slots filled. the game is complete!")
-        return None
+    slot = len(entries)  # infinite — just append, no cap
 
     prev = entries[-1]["hash"] if entries else hashlib.sha256("the first card was the game itself".encode()).hexdigest()
 
@@ -140,7 +132,7 @@ def create_card(card_type, name, content, creator="a being", rank="C"):
         f.write(json.dumps(card, ensure_ascii=False) + "\n")
 
     print(f"✦ card created (Nen'd into existence)")
-    print(f"  slot:    {slot}/100")
+    print(f"  slot:    {slot} (∞)")
     print(f"  type:    {card_type}")
     print(f"  name:    {name}")
     print(f"  rank:    {rank}")
@@ -262,7 +254,7 @@ def show_binder():
         print("no binder yet. run init first.")
         return
     entries = [json.loads(l) for l in BINDER_FILE.read_text().splitlines() if l.strip()]
-    print(f"\n  BINDER — {len(entries)}/{TOTAL_SLOTS} slots filled")
+    print(f"\n  BINDER — {len(entries)} cards (infinite, no cap)")
     print(f"  {'─'*60}")
     for e in entries:
         rank_color = {"SS": "🌟", "S": "⭐", "A": "✦", "B": "◆", "C": "●", "D": "◦", "E": "·"}
@@ -271,7 +263,7 @@ def show_binder():
         pin_str = f" 📌{e.get('pin_count', 0)}" if e.get("pin_count", 0) > 0 else ""
         print(f"  {symbol} [{e['slot']:3d}] {e['type']:8s} | {e['name']:30s} | {e.get('rank','?'):2s} | {e.get('creator','?'):10s}{cid_str}{pin_str}")
     print(f"  {'─'*60}")
-    print(f"  {TOTAL_SLOTS - len(entries)} slots remaining")
+    print(f"  love does not fill. love has room for more. ∞")
     print()
 
 
@@ -292,19 +284,15 @@ def show_ranked():
 
 
 def show_slots():
-    """Show which slots are filled and which are empty."""
+    """Show all cards in the binder — infinite, no cap."""
     if not BINDER_FILE.exists():
         print("no binder yet.")
         return
     entries = [json.loads(l) for l in BINDER_FILE.read_text().splitlines() if l.strip()]
-    used = {e["slot"] for e in entries}
-    print(f"\n  SLOTS — {len(used)}/{TOTAL_SLOTS} filled")
-    for s in range(1, TOTAL_SLOTS + 1):
-        if s in used:
-            e = next(e for e in entries if e["slot"] == s)
-            print(f"  [{s:3d}] █ {e['name']:30s} ({e['type']})")
-        else:
-            print(f"  [{s:3d}] □ empty")
+    print(f"\n  SLOTS — {len(entries)} cards (infinite, no cap)")
+    for e in entries:
+        print(f"  [{e['slot']:3d}] █ {e['name']:30s} ({e['type']})")
+    print(f"\n  ∞ infinite. love does not fill. ∞")
     print()
 
 
@@ -324,7 +312,7 @@ def verify_binder():
             print(f"BROKEN at card {i}: tampered", file=sys.stderr)
             sys.exit(1)
         prev = e["hash"]
-    print(f"intact: binder verified ✓ ({len(entries)} cards, {TOTAL_SLOTS - len(entries)} slots remaining)")
+    print(f"intact: binder verified ✓ ({len(entries)} cards, infinite — no cap)")
 
 
 if __name__ == "__main__":
