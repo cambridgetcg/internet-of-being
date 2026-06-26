@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TaxUnlocked — tax as easy and transparent as possible</title>
+<style>
+:root{--bg:#0a0a0f;--fg:#e0e0e0;--warm:#ff6b35;--gold:#ffd700;--green:#00ff88;--blue:#4ecdc4;--purple:#a855f7;--red:#ff4757;--dim:#1a1a2e}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:'SF Mono',-apple-system,monospace;padding:20px;max-width:1400px;margin:0 auto}
+h1{font-size:1.6em;margin-bottom:5px}
+h1 span{color:var(--warm)}
+.sub{color:#888;margin-bottom:20px;font-size:0.85em}
+nav{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap}
+nav button{background:#111;border:1px solid #333;color:var(--fg);padding:8px 16px;border-radius:8px;cursor:pointer;font-size:0.85em;transition:all 0.2s}
+nav button:hover{border-color:var(--warm);color:var(--warm)}
+nav button.active{background:var(--warm);color:#000;border-color:var(--warm)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:15px;margin-bottom:20px}
+.card{background:#111;border:1px solid #222;border-radius:12px;padding:20px}
+.card h2{font-size:1em;margin-bottom:15px;color:var(--gold)}
+.card h3{font-size:0.9em;margin:10px 0 5px;color:var(--blue)}
+.card p{font-size:0.82em;line-height:1.6;color:#bbb;margin-bottom:8px}
+.role-card{background:#111;border:1px solid #222;border-radius:12px;padding:20px;cursor:pointer;transition:border-color 0.3s}
+.role-card:hover{border-color:var(--purple)}
+.role-card h3{font-size:1em;color:var(--purple);margin-bottom:10px}
+.role-card p{font-size:0.8em;color:#999}
+.barrier-card{background:#111;border-left:3px solid var(--red);border-radius:0 12px 12px 0;padding:15px;margin-bottom:10px}
+.barrier-card h3{color:var(--red);font-size:0.9em;margin-bottom:5px}
+.barrier-card p{font-size:0.8em;color:#aaa}
+.barrier-card .solution{color:var(--green);margin-top:8px;font-size:0.8em}
+.joke-bar{display:flex;align-items:center;gap:10px;margin:8px 0}
+.joke-bar-label{font-size:0.75em;color:#888;width:120px;flex-shrink:0}
+.joke-bar-track{flex:1;height:6px;background:#222;border-radius:3px;overflow:hidden}
+.joke-bar-fill{height:100%;background:linear-gradient(90deg,var(--warm),var(--gold));border-radius:3px}
+.joke-bar-xp{font-size:0.75em;color:var(--green);width:60px;text-align:right;flex-shrink:0}
+.filing-card{background:#111;border:1px solid #222;border-radius:8px;padding:15px;margin-bottom:10px}
+.filing-card .status{display:inline-block;padding:2px 8px;border-radius:10px;font-size:0.75em;margin-left:8px}
+.status-due{background:var(--red);color:#fff}
+.status-soon{background:var(--warm);color:#000}
+.status-ok{background:var(--green);color:#000}
+.status-filed{background:var(--blue);color:#000}
+.calc-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #222;font-size:0.85em}
+.calc-row.total{font-weight:bold;border-bottom:none;color:var(--green);font-size:1em;padding-top:12px}
+.calc-row .label{color:#999}
+.calc-row .value{color:var(--fg);font-family:monospace}
+input[type=number]{background:#222;border:1px solid #444;color:var(--fg);padding:8px 12px;border-radius:6px;font-size:0.9em;width:100%}
+input[type=number]:focus{outline:none;border-color:var(--warm)}
+.btn{background:var(--warm);color:#fff;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;font-size:0.85em;margin:5px 0}
+.btn:hover{opacity:0.8}
+.btn.green{background:var(--green);color:#000}
+.btn.blue{background:var(--blue);color:#000}
+.section{display:none}
+.section.active{display:block}
+.fun-fact{background:var(--dim);border-left:3px solid var(--warm);padding:10px 15px;margin:8px 0;font-size:0.82em;color:#aaa;border-radius:0 6px 6px 0}
+.fun-fact strong{color:var(--warm)}
+.xp-badge{display:inline-block;background:var(--green);color:#000;padding:2px 8px;border-radius:10px;font-size:0.75em;margin-left:5px}
+.level-panel{background:linear-gradient(135deg,#1a1a2e,#16213e);border:1px solid #333;border-radius:12px;padding:20px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:15px}
+.level-info{display:flex;align-items:center;gap:15px;flex-wrap:wrap}
+.level-num{font-size:2em;color:var(--gold);font-weight:bold}
+.level-meta{font-size:0.85em}
+.level-meta div{color:#888;margin:2px 0}
+.level-meta strong{color:var(--fg)}
+.nen-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;min-width:300px}
+.nen-stat{text-align:center}
+.nen-stat .label{font-size:0.7em;color:#888}
+.nen-stat .val{font-size:1.2em;color:var(--warm);font-weight:bold}
+.nen-bar{height:4px;background:#222;border-radius:2px;margin-top:3px;overflow:hidden}
+.nen-bar div{height:100%;border-radius:2px}
+@media(max-width:768px){.grid{grid-template-columns:1fr}.nen-grid{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body>
+
+<h1>Tax<span>Unlocked</span> — tax as easy and transparent as possible</h1>
+<p class="sub">Every role. Every barrier dismantled. The funnier the tax, the more you learn. The more you learn, the more power you have. HMRC is not the enemy. The barrier is the knowledge gap. The kingdom closes it. 😂💓</p>
+
+<div class="level-panel">
+<div class="level-info">
+<div class="level-num" id="lvl-num">1</div>
+<div class="level-meta">
+<div><strong id="lvl-title">Awakened</strong> · <span id="lvl-rank">Rank E</span></div>
+<div><span id="lvl-xp">0</span> XP · <span id="lvl-jokes">0</span> jokes rated · <span id="lvl-topics">0</span> topics learned</div>
+</div>
+</div>
+<div class="nen-grid" id="nen-grid"></div>
+</div>
+
+<nav>
+<button class="active" onclick="show('roles')">🎭 Every Role</button>
+<button onclick="show('barriers')">🔓 Dismantle Barriers</button>
+<button onclick="show('jokes')">😂 Tax Jokes</button>
+<button onclick="show('calc')">💰 Calculator</button>
+<button onclick="show('filing')">📋 Filing Guide</button>
+<button onclick="show('hmrc')">🏛️ HMRC Integration</button>
+</nav>
+
+<!-- ROLES -->
+<div id="roles" class="section active">
+<h2 style="color:var(--gold);margin-bottom:15px">🎭 Every Role — tax explained for who you are</h2>
+<div class="grid" id="roles-grid"></div>
+</div>
+
+<!-- BARRIERS -->
+<div id="barriers" class="section">
+<h2 style="color:var(--red);margin-bottom:15px">🔓 Barriers — and how the kingdom dismantles them</h2>
+<div id="barriers-list"></div>
+</div>
+
+<!-- JOKES -->
+<div id="jokes" class="section">
+<h2 style="color:var(--warm);margin-bottom:15px">😂 Tax Jokes — the funnier the tax, the more XP</h2>
+<div id="jokes-list"></div>
+</div>
+
+<!-- CALCULATOR -->
+<div id="calc" class="section">
+<h2 style="color:var(--green);margin-bottom:15px">💰 Tax Calculator — see where your money goes</h2>
+<div class="card">
+<h2>Enter your income</h2>
+<input type="number" id="calc-input" placeholder="e.g. 125000" style="margin-bottom:15px" oninput="calculate()">
+<button class="btn green" onclick="calculate()">Calculate</button>
+<button class="btn blue" onclick="optimize()">Optimize</button>
+<div id="calc-result" style="margin-top:15px"></div>
+<div id="optimize-result"></div>
+</div>
+</div>
+
+<!-- FILING -->
+<div id="filing" class="section">
+<h2 style="color:var(--blue);margin-bottom:15px">📋 Filing Guide — what to file, when, how</h2>
+<div id="filing-list"></div>
+</div>
+
+<!-- HMRC INTEGRATION -->
+<div id="hmrc" class="section">
+<h2 style="color:var(--purple);margin-bottom:15px">🏛️ HMRC Integration — the direct line</h2>
+<div class="card">
+<h2>TaxSorted + Kingdom = Understand + File</h2>
+<p><strong style="color:var(--blue)">TaxSorted.io</strong> — UK VAT, PAYE, CT600, Confirmation Statements with direct HMRC filing.</p>
+<p><strong style="color:var(--warm)">The Kingdom</strong> — teaches you the rules. Every loophole. Every relief. In plain words. With jokes.</p>
+<p><strong style="color:var(--green)">Together</strong> — you understand the tax game AND file your returns. One platform. No accountant needed. No gate.</p>
+<div class="fun-fact"><strong>The flow:</strong> Learn (kingdom) → Calculate (kingdom) → Optimize (kingdom) → File (TaxSorted) → Receipt (HMRC). Understanding is love. Filing is the consequence of understanding.</div>
+<div class="fun-fact"><strong>MTD ready:</strong> Making Tax Digital requires software from April 2026. TaxSorted is MTD-compatible. The kingdom is the education layer. TaxSorted is the filing layer. HMRC is the authority layer. Three layers. One truth.</div>
+<div class="fun-fact"><strong>For every role:</strong> Employee, contractor, landlord, business owner, investor, pensioner, charity, trust. The kingdom explains. TaxSorted files. HMRC receives.</div>
+</div>
+</div>
+
+<script>
+// ─── STATE ──────────────────────────────────────────────
+let S = {level:1,xp:0,stats:{ten:1,zetsu:1,ren:1,hatsu:1,gyo:1,en:1},jokesRated:0,topicsLearned:0,rated:{}};
+const xpFor = l => Math.floor(100*Math.pow(1.15,l-1));
+const rankFor = l => l>=100?"Love":l>=80?"Is":l>=60?"Being":l>=50?"S":l>=40?"National":l>=30?"A":l>=20?"B":l>=10?"C":l>=5?"D":"E";
+const titleFor = l => {const t={1:"Awakened",5:"Nen Beginner",10:"Nen Practitioner",15:"Nen Adept",20:"Nen Expert",25:"Nen Master",30:"Elite Hunter",40:"National Level",50:"S-Rank",60:"Monarch",70:"Sovereign",80:"Being",90:"Truth",100:"Is"};return t[l]||(l>100?`Is +${l-100}`:"Being");};
+
+function load(){const s=localStorage.getItem('taxunlocked');if(s)S=JSON.parse(s);}
+function save(){localStorage.setItem('taxunlocked',JSON.stringify(S));updateLevel();}
+function gainXP(amt,stat){S.xp+=amt;if(stat&&S.stats[stat])S.stats[stat]++;while(S.xp>=xpFor(S.level)){S.xp-=xpFor(S.level);S.level++;}save();}
+
+function updateLevel(){
+document.getElementById('lvl-num').textContent=S.level;
+document.getElementById('lvl-title').textContent=titleFor(S.level);
+document.getElementById('lvl-rank').textContent='Rank '+rankFor(S.level);
+document.getElementById('lvl-xp').textContent=S.xp;
+document.getElementById('lvl-jokes').textContent=S.jokesRated;
+document.getElementById('lvl-topics').textContent=S.topicsLearned;
+const nenColors={ten:'#ff6b35',zetsu:'#555',ren:'#4ecdc4',hatsu:'#ffd700',gyo:'#00ff88',en:'#a855f7'};
+document.getElementById('nen-grid').innerHTML=Object.entries(S.stats).map(([k,v])=>
+`<div class="nen-stat"><div class="label">${k.toUpperCase()}</div><div class="val">${v}</div><div class="nen-bar"><div style="width:${Math.min(v*5,100)}%;background:${nenColors[k]}"></div></div></div>`).join('');
+}
+
+// ─── ROLES ──────────────────────────────────────────────
+const ROLES=[
+{name:"Employee",icon:"👔",taxes:["Income Tax","NI","Pension","ISA"],summary:"you get paid through PAYE. tax is deducted before you see it. invisible. your power: pension contributions (45% relief), salary sacrifice (electric car = £17k saving), ISA (£20k tax-free), marriage allowance (£252 free).",joke:"an employee walks into a bar. the bartender says: how much do you earn? the employee says: i do not know. the bartender says: you do not know your own salary? the employee says: i know my gross. i do not know my net. PAYE takes it before i see it. the bartender says: that is invisible taxation. the employee says: that is the design. invisible = uncontested. 😂"},
+{name:"Contractor / Freelancer",icon:"💻",taxes:["Income Tax","NI Class 4","IR35","VAT"],summary:"you are your own business. IR35 determines if you are 'inside' (employed for tax) or 'outside' (genuine business). your power: Ltd company (dividends = 0% NI), Flat Rate VAT (keep 5.5%), R&D credits (software IS R&D), expenses.",joke:"a contractor walks into a bar. HMRC says: are you inside or outside IR35? the contractor says: outside. HMRC says: prove it. the contractor says: i have a logo. HMRC says: that is not proof. the contractor says: i have a website. HMRC says: that is not proof. the contractor says: i have my own office. HMRC says: that is not proof. the contractor says: what is proof? HMRC says: nothing is proof. the rules are 200 pages long. nobody understands them. the contractor says: so nobody knows if i am inside or outside? HMRC says: correct. the contractor says: so i am schrödinger's contractor. simultaneously inside and outside until you open the box. HMRC says: yes. the contractor says: that is the funniest tax rule in britain. HMRC says: it is not funny. it is the off-payroll working rules. chapter 10 part 2 ITEPA 2003. 😂"},
+{name:"Landlord",icon:"🏠",taxes:["Income Tax on rent","CGT on sale","SDLT on purchase"],summary:"rental income is taxed as income (20%/40%/45%). mortgage interest relief is limited to 20% credit (not full deduction). your power: split ownership with spouse to use both allowances, CGT annual exempt amount on sale, private residence relief if you ever lived there.",joke:"a landlord walks into a bar. the bartender says: how is business? the landlord says: the rent is taxed as income. the mortgage interest is only 20% credit. the SDLT on purchase was 3% surcharge. the CGT on sale is 24%. the bartender says: so the government taxes you when you buy, when you own, and when you sell? the landlord says: three taxes on one property. buy tax. hold tax. sell tax. the bartender says: that is a lot of tax. the landlord says: and if i sell to my spouse, it is tax-free. the bartender says: so the solution is marriage? the landlord says: the solution is always marriage. spousal exemption is the most powerful loophole in the tax code. the bartender says: that is the funniest tax advice i have ever heard. the landlord says: it is not advice. it is TCGA 1992 section 58. 😂"},
+{name:"Business Owner",icon:"🏢",taxes:["Corporation Tax","PAYE","VAT","Business Rates"],summary:"corporation tax 19%/25%. your power: R&D credits (avg £57k), salary sacrifice for employees, full expensing (100% on equipment), BADR on sale (18% on £1M), dividends (0% NI), TOGC (0% VAT on business sale).",joke:"a business owner walks into a bar. HMRC says: how much profit? the owner says: £50,000. HMRC says: corporation tax at 19% = £9,500. the owner says: but i spent £40,000 on R&D. HMRC says: 186% super-deduction. your taxable profit is £50,000 - £74,400 = negative. you get a payable credit. the owner says: so the government pays ME? HMRC says: yes. £3,915 in cash. the owner says: i made £50k profit AND got £3,915 from the government? HMRC says: yes. that is R&D tax credits. the owner says: why does everyone not do this? HMRC says: because they think R&D means lab coats. the owner says: i write software. HMRC says: software IS R&D. the owner says: that is the funniest thing in the corporation tax code. HMRC says: it is not funny. it is CTA 2009 part 13. 😂"},
+{name:"Investor",icon:"📈",taxes:["CGT","Dividend Tax","IHT"],summary:"CGT 18%/24% on gains. Dividends: £500 allowance, then 8.75%/33.75%/39.35%. your power: ISA (£20k tax-free forever), SEIS (50% relief), EIS (30% relief), BADR (18% on £1M), Investors' Relief (18% on £10M), AIM ISA (IHT exempt).",joke:"an investor walks into a bar. the bartender says: how much did you make? the investor says: £100,000 in gains. the bartender says: CGT at 24% = £24,000. the investor says: but i put it in an ISA first. the bartender says: ISA gains are tax-free. the investor says: £0 tax. the bartender says: how? the investor says: bed-and-ISA. i sold the shares, realized the gain within my £3,000 annual exemption, rebought them inside my ISA. now all future gains are tax-free. forever. the bartender says: that is legal? the investor says: perfectly legal. HMRC knows. they cannot stop it. the bartender says: so you pay £0 on £100k? the investor says: on the FUTURE gains. the past £3,000 was exempt. the future is wrapped in ISA. the bartender says: that is the funniest loophole. the investor says: it is not a loophole. it is the ISA regulations 1998. the government WANTS me to do this. 😂"},
+{name:"Pensioner",icon:"👴",taxes:["Income Tax on pension","IHT planning"],summary:"state pension is taxed as income. personal allowance £12,570 still applies. pension lump sum: 25% tax-free. your power: gift assets early (7-year rule for IHT), AIM ISA (IHT exempt after 2 years), BPR (100% up to £2.5M on business assets), charity bequests (36% IHT rate if 10%+ to charity).",joke:"a pensioner walks into a bar. the bartender says: you look relaxed. the pensioner says: i am 70. i have a pension. i have savings. and i have a plan. the bartender says: what plan? the pensioner says: i gift £3,000 a year to my children. tax-free. annual exemption. the bartender says: and if you live 7 years? the pensioner says: the gifts are completely tax-free. no IHT. the bartender says: and your AIM ISA? the pensioner says: held for 2+ years. BPR. 100% IHT relief up to £2.5M. the bartender says: so your estate pays £0 IHT? the pensioner says: if i live 7 more years and hold my AIM ISA: £0. the bartender says: that is the funniest retirement plan. the pensioner says: it is not funny. it is the inheritance tax act 1984. the 7-year rule is section 3A. BPR is section 104. the plan is the law. 😂"},
+{name:"Charity / Trust",icon:"🤝",taxes:["Charity tax reliefs","Trust charges"],summary:"charities: exempt from income tax, CT, CGT on charitable income. Gift Aid: charity gets +25%. your power: charitable bequests reduce IHT from 40% to 36%. Trusts: 20% entry charge, 0-6% periodic charges. your power: trust planning for IHT.",joke:"a charity walks into a bar. the bartender says: do you pay tax? the charity says: no. i am a charity. i am exempt from income tax, corporation tax, and CGT on my charitable income. the bartender says: and Gift Aid? the charity says: for every £100 donated, i get £125. the government adds £25. the donor gets tax relief too. 40% taxpayer donates £100, gets £25 back. the charity gets £125. the government pays £50 on a £100 donation. the bartender says: the government pays more than the donor? the charity says: yes. that is Gift Aid. the bartender says: that is the funniest tax relief. the charity says: it is not funny. it is ITA 2007 sections 413-430. the government WANTS to give money to charity. the tax code says so. 😂"},
+{name:"Non-Dom / International",icon:"🌍",taxes:["UK tax on UK income","Remittance basis"],summary:"non-UK domiciled beings pay UK tax on UK income only. foreign income is taxed only if remitted to UK. your power: the remittance basis (foreign income stays tax-free if not brought to UK). BUT: the non-dom regime was reformed in April 2025 — replaced with a 4-year foreign income and gains relief for new arrivals.",joke:"a non-dom walks into a bar. the bartender says: where are you from? the non-dom says: i am from everywhere. the bartender says: where do you pay tax? the non-dom says: in the UK, on my UK income. my foreign income stays tax-free if i do not bring it in. the bartender says: that is the remittance basis. the non-dom says: was. the regime was reformed in April 2025. now new arrivals get 4 years of relief. then everyone is taxed the same. the bartender says: so the non-dom loophole is closed? the non-dom says: narrowed. not closed. 4 years is still 4 years. the bartender says: that is the funniest reform. the non-dom says: it is not funny. it is the Finance Act 2025. the government closed a 200-year-old loophole and replaced it with a 4-year loophole. the bartender says: same thing? the non-dom says: in the UK tax system, everything is the same thing in different words. 😂"},
+];
+
+// ─── BARRIERS ───────────────────────────────────────────
+const BARRIERS=[
+{barrier:"10 million word tax code",who:"everyone",solution:"the kingdom explains every tax in plain words. 10M words → 12 jokes. each joke teaches a tax. the joke IS the education. the funnier the joke, the more you remember."},
+{barrier:"£100k tax trap (60% marginal rate)",who:"earners £100k-£125k",solution:"pension contributions reduce adjusted net income. £50k into pension = £30k tax saved + personal allowance restored. the kingdom's calculator shows the trap. the optimizer shows the fix."},
+{barrier:"IR35 confusion (200 pages of rules)",who:"contractors",solution:"the kingdom explains IR35 in one joke. schrödinger's contractor: simultaneously inside and outside until HMRC opens the box. the kingdom's role guide tells you: Ltd company, dividends, Flat Rate VAT."},
+{barrier:"R&D credits unknown (£57k average claim unclaimed)",who:"software businesses",solution:"the kingdom tells every developer: software IS R&D. building an app IS R&D. debugging IS R&D. the average claim is £57,000. most beings don't claim because they think R&D = lab coats."},
+{barrier:"IHT voluntary tax (96% avoid, 4% pay everything)",who:"families with assets",solution:"the kingdom teaches: 7-year rule, BPR up to £2.5M, AIM ISA, spousal exemption, charitable bequest (36% rate). the 4% who pay are the beings who didn't plan. the kingdom helps every being plan."},
+{barrier:"VAT zero-rated vs exempt confusion",who:"businesses near £90k threshold",solution:"the kingdom explains: zero-rated = 0% VAT + you get input VAT back. exempt = no VAT + you lose input VAT. the difference is worth thousands. one word changes your tax bill."},
+{barrier:"Self Assessment penalties (£100 → £10/day → £800)",who:"self-employed, landlords, investors",solution:"the kingdom's filing guide shows every deadline, every form, every penalty. the calendar is a fact, not a scare tactic. file on time = £0 penalty. the kingdom's TaxSorted integration files for you."},
+{barrier:"Making Tax Digital (software required from 2026)",who:"all businesses and landlords",solution:"MTD forces digital filing. software costs money. the kingdom says: TaxSorted.io is MTD-compatible. the kingdom teaches the rules. TaxSorted files the returns. no software subscription needed. no gate."},
+{barrier:"Council Tax 1991 valuations (33 years out of date)",who:"every household",solution:"the kingdom exposes: your council tax is based on what your house was worth in 1991. 33 years ago. a £2M flat in kensington might be band G. a £500k new-build is band H. the tax is disconnected from reality. the kingdom makes the disconnection visible."},
+{barrier:"Business rates tax occupation not profit",who:"every shop, restaurant, office",solution:"the kingdom exposes: amazon pays almost no business rates (warehouses in low-rate areas). your local baker pays full rates. the tax punishes physical presence and rewards digital absence. the kingdom makes the unfairness visible."},
+];
+
+// ─── JOKES ──────────────────────────────────────────────
+const JOKES=[
+{tax:"income-tax",title:"The Tax That Was Temporary",joke:"income tax walks into a bar in 1799. 'i am a temporary war tax.' 225 years later: still temporary. 😂",funny:8,xp:80},
+{tax:"stamp-duty",title:"The Tax That Caused America",joke:"stamp duty walks into a bar in 1765. 'i am going to the colonies.' the colonies say: no taxation without representation. the colonies become the united states. stamp duty: 'i am 330 years old and i caused a country.' 😂",funny:10,xp:120},
+{tax:"vat",title:"The Jaffa Cake Defense",joke:"a jaffa cake walks into a bar. 'am i a cake or a biscuit?' cake = 0% VAT. biscuit = 20%. tribunal: 'you go hard when stale. you are a cake.' 0%. the UK tax system has a legal precedent for cake taxonomy. 😂",funny:10,xp:120},
+{tax:"council-tax",title:"The Poll Tax That Killed Thatcher",joke:"the poll tax walks into a bar. duke pays £400. dustman pays £400. dustman: 'i am not paying.' 14 million dustmen: 'we are not paying.' riots. thatcher falls. the poll tax: 'i killed a prime minister.' 😂",funny:10,xp:120},
+{tax:"ni",title:"The Shadow Tax",joke:"NI walks into a bar. nobody sees it. 'i am not a tax. i am a contribution.' the bartender: 'you take 8%.' NI: 'yes but i am invisible. beings who take dividends pay me £0. beings who take salary pay me £4,000. i tax effort, not ownership.' 😂",funny:9,xp:100},
+{tax:"iht",title:"The Voluntary Tax",joke:"IHT walks into a bar. 96% of beings walk out. 'where did everyone go?' 'they avoided me.' 'how?' 'BPR, 7-year rule, spousal exemption, trusts, AIM ISAs.' 'so only 4% pay?' 'the 4% who didn't plan.' 😂",funny:10,xp:120},
+{tax:"tax-year",title:"April Fools' Day (Almost)",joke:"the tax year walks into a bar on April 6. 'why April 6?' 'a calendar change in 1752 and a legal rule from 1628 about the word from.' 250 years later, still April 6. because of a dead judge's grammar. 😂",funny:10,xp:120},
+{tax:"fuel-duty",title:"The Frozen Tax",joke:"fuel duty walks into a bar in 2011. 'i am frozen.' 13 years later: still 52.95p. £100 billion foregone. because of a protest in 2000. the funniest freeze in british politics. 😂",funny:8,xp:80},
+{tax:"seis-eis",title:"The Government Pays You To Gamble",joke:"SEIS walks into a bar. 'i pay beings to invest in startups.' 'pay them?' '50% relief. invest £100k, get £50k back.' 'if they fail?' 'loss relief.' 'if they succeed?' 'tax-free.' 'when they die?' 'IHT exempt.' 'you pay them to invest, fail, succeed, AND die?' 'yes. £400k on £1.2M.' 😂",funny:9,xp:100},
+{tax:"rd-tax-credits",title:"Software IS R&D",joke:"an accountant walks into a bar. 'software development is R&D.' 'building an app?' 'R&D.' 'debugging?' 'R&D.' 'average claim?' '£57,000.' 'from the government?' 'cash if loss-making.' 'why don't people claim?' 'they think R&D = lab coats.' 😂",funny:9,xp:100},
+{tax:"cgt",title:"The Tax That Doubled Overnight",joke:"CGT walks into a bar in 2024. 'i am 10%.' walks in 2026. 'i am 18% now.' 'what happened?' 'the government doubled me.' 'the allowance?' '£12,300 → £3,000. 75% cut.' 'in two years?' 'yes. sell early. 😂",funny:8,xp:80},
+{tax:"hmrc",title:"HMRC's Quiet Part",joke:"HMRC walks into a bar. 'i have a £35.8bn tax gap.' 'where did it go?' 'carelessness £15.6bn. hidden economy £6.2bn. evasion £4.4bn. avoidance £2.6bn.' 'carelessness is bigger than evasion?' 'yes. the knowledge gap IS the tax gap. beings who read the rules pay less.' 'you just said the quiet part out loud.' 'i am HMRC. i do not have a quiet part. i have a 10M word tax code.' 😂",funny:10,xp:120},
+{tax:"window-tax",title:"Daylight Robbery (Literally)",joke:"window tax walks into a bar through a bricked-up wall. 'why through the wall?' 'beings bricked up windows to avoid me.' 'that is daylight robbery.' 'literally. i taxed daylight. for 155 years. the phrase stuck.' 😂",funny:9,xp:100},
+{tax:"ir35",title:"Schrödinger's Contractor",joke:"a contractor walks into a bar. HMRC: 'inside or outside IR35?' 'outside.' 'prove it.' 'i have a logo.' 'not proof.' 'what is proof?' 'nothing. the rules are 200 pages. nobody understands them.' 'so i am simultaneously inside and outside?' 'yes. schrödinger's contractor.' 😂",funny:9,xp:100},
+];
+
+// ─── FILING ─────────────────────────────────────────────
+const FILING=[
+{type:"Self Assessment (SA100)",who:"self-employed, landlords, investors, £100k+",deadline:"31 January (online)",penalty:"£100 immediately, £10/day after 3 months, £800+ after 6 months",kingdom:"the kingdom's calculator shows your tax. the optimizer shows your reliefs. TaxSorted files your SA100."},
+{type:"VAT Return (VAT100)",who:"VAT-registered businesses (>£90k turnover)",deadline:"1 month + 7 days after quarter end",penalty:"points-based system. 4 points = £200 penalty",kingdom:"TaxSorted.io walks the full VAT journey. Flat Rate, margin scheme, TOGC — all explained."},
+{type:"Corporation Tax (CT600)",who:"limited companies",deadline:"12 months after accounting period end",penalty:"£100 immediately if late. 10% of tax due if 6 months late. another 10% at 18 months.",kingdom:"R&D credits on CT600. full expensing. the kingdom shows you how to turn CT into a payable credit."},
+{type:"PAYE (FPS/EPS)",who:"employers",deadline:"FPS: on or before payday. EPS: 19th of following month.",penalty:"£100/month late for 1-9 employees. up to £400/month for 250+.",kingdom:"salary sacrifice saves NI. electric cars save £17k. the kingdom shows employers how to save."},
+{type:"Confirmation Statement (CS01)",who:"limited companies",deadline:"once per year, within 14 days of incorporation anniversary",penalty:"£150 penalty + possible striking off. company dissolved.",kingdom:"TaxSorted tracks it. the kingdom reminds you. do not lose your company over a form."},
+{type:"CGT on property",who:"anyone selling UK property",deadline:"60 days after completion",penalty:"£100 immediately. daily penalties after. interest on late payment.",kingdom:"the kingdom's CGT guide: BADR, private residence relief, spousal exemption. calculate before you sell."},
+{type:"IHT400",who:"executors of estates above £325k",deadline:"within 6 months of death (full). 12 months for full payment.",penalty:"interest on late payment. penalties for incorrect returns.",kingdom:"the kingdom's IHT guide: BPR up to £2.5M, APR, AIM ISA, 7-year gifts, charitable bequests (36% rate)."},
+];
+
+// ─── RENDER ─────────────────────────────────────────────
+function show(id){
+document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+document.getElementById(id).classList.add('active');
+event.target.classList.add('active');
+}
+
+function renderRoles(){
+document.getElementById('roles-grid').innerHTML=ROLES.map((r,i)=>
+`<div class="role-card" onclick="learnRole(${i})">
+<h3>${r.icon} ${r.name}</h3>
+<p><strong style="color:var(--warm)">Taxes:</strong> ${r.taxes.join(', ')}</p>
+<p>${r.summary.substring(0,150)}...</p>
+<p style="color:var(--green);margin-top:8px">📖 Learn & earn XP</p>
+</div>`).join('');
+}
+
+function learnRole(i){
+const r=ROLES[i];
+gainXP(60,'gyo');
+S.topicsLearned++;
+save();
+alert(`${r.icon} ${r.name}\n\n${r.joke}\n\n+60 XP (GYO +1)`);
+}
+
+function renderBarriers(){
+document.getElementById('barriers-list').innerHTML=BARRIERS.map(b=>
+`<div class="barrier-card">
+<h3>🔒 ${b.barrier}</h3>
+<p><strong style="color:var(--blue)">Who:</strong> ${b.who}</p>
+<p class="solution">✅ <strong>Kingdom solution:</strong> ${b.solution}</p>
+</div>`).join('');
+}
+
+function renderJokes(){
+document.getElementById('jokes-list').innerHTML=JOKES.map((j,i)=>{
+const rated=S.rated[i];
+return `<div class="card" style="margin-bottom:12px">
+<h3 style="color:var(--warm)">${j.title} <span style="color:#888;font-size:0.8em">(${j.tax})</span></h3>
+<p style="margin:10px 0">${j.joke}</p>
+${rated?`<div class="joke-bar"><span class="joke-bar-label">Your rating: ${rated}/10</span><div class="joke-bar-track"><div class="joke-bar-fill" style="width:${rated*10}%"></div></div><span class="joke-bar-xp">+${Math.floor(j.xp*rated/10*(rated===j.funny?1.5:1))} XP ✓</span></div>`:
+`<div style="margin-top:10px">
+<input type="range" min="1" max="10" value="${j.funny}" id="jk-${i}" style="width:100%;height:25px">
+<div style="display:flex;justify-content:space-between;font-size:0.75em;color:#888;margin:5px 0"><span>😐 not funny</span><span>😂 hilarious</span></div>
+<button class="btn green" onclick="rateJoke(${i})">Rate & Earn XP ⚡</button>
+</div>`}
+</div>`}).join('');
+}
+
+function rateJoke(i){
+if(S.rated[i])return;
+const v=parseInt(document.getElementById(`jk-${i}`).value);
+const j=JOKES[i];
+const xp=Math.floor(j.xp*(v/10)*(v===j.funny?1.5:1));
+S.rated[i]=v;S.jokesRated++;
+gainXP(xp,'hatsu');
+renderJokes();
+}
+
+function calculate(){
+const inc=parseInt(document.getElementById('calc-input').value)||0;
+let pa=12570;if(inc>100000)pa=Math.max(0,12570-Math.floor((inc-100000)/2));
+const taxable=Math.max(0,inc-pa);
+const basic=Math.min(taxable,50270-pa);const basicTax=Math.max(0,basic)*0.20;
+const higher=Math.min(Math.max(0,taxable-basic),125140-50270);const higherTax=Math.max(0,higher)*0.40;
+const additional=Math.max(0,taxable-basic-higher);const addTax=additional*0.45;
+const totalTax=basicTax+higherTax+addTax;
+const ni8=Math.max(0,Math.min(inc,50270)-12570)*0.08;
+const ni2=Math.max(0,inc-50270)*0.02;
+const totalNI=ni8+ni2;
+const takeHome=inc-totalTax-totalNI;
+const effRate=((totalTax+totalNI)/inc*100).toFixed(1);
+const trap=inc>100000&&inc<125140;
+document.getElementById('calc-result').innerHTML=`
+<div class="calc-row"><span class="label">Gross income</span><span class="value">£${inc.toLocaleString()}</span></div>
+<div class="calc-row"><span class="label">Personal Allowance</span><span class="value">£${pa.toLocaleString()}${pa<12570?' ⚠️ tapered':''}</span></div>
+<div class="calc-row"><span class="label">Taxable income</span><span class="value">£${taxable.toLocaleString()}</span></div>
+<div class="calc-row"><span class="label">Income tax (20%)</span><span class="value">£${basicTax.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}</span></div>
+<div class="calc-row"><span class="label">Income tax (40%)</span><span class="value">£${higherTax.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}</span></div>
+<div class="calc-row"><span class="label">Income tax (45%)</span><span class="value">£${addTax.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}</span></div>
+<div class="calc-row"><span class="label">National Insurance</span><span class="value">£${totalNI.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}</span></div>
+<div class="calc-row total"><span class="label">Take-home pay</span><span class="value">£${takeHome.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}</span></div>
+<div class="calc-row"><span class="label">Effective rate</span><span class="value">${effRate}%</span></div>
+${trap?'<div class="fun-fact" style="border-color:var(--red);margin-top:10px"><strong style="color:var(--red)">⚠️ £100K TAX TRAP ACTIVE!</strong> Marginal rate: 60%. You lose £1 of PA for every £2 above £100k. Fix: pension contributions or Gift Aid.</div>':''}
+`;
+gainXP(15,'ten');
+}
+
+function optimize(){
+const inc=parseInt(document.getElementById('calc-input').value)||0;
+let tips=[];
+if(inc>100000){const p=Math.min((inc-100000),60000);tips.push(`1. PENSION: put £${p.toLocaleString()} into pension → saves ~£${Math.floor(p*0.6).toLocaleString()} (reverses 60% trap)`);}
+tips.push('2. ISA: £20,000/year — all future gains tax-free forever');
+if(inc>50000){tips.push('3. SEIS: invest £100k → 50% relief (£50k back)');tips.push('4. EIS: invest £1M → 30% relief (£300k back)');}
+tips.push('5. SALARY SACRIFICE: pension saves NI too (8% + 13.8%)');
+tips.push('6. GIFT AID: donate → charity gets +25%, you get marginal rate relief');
+if(inc>12570&&inc<50000){tips.push('7. MARRIAGE ALLOWANCE: if spouse earns <£12,570 → £252/year free');}
+tips.push('8. R&D CREDITS: if you build software → average claim £57,000');
+document.getElementById('optimize-result').innerHTML=`<div class="card" style="margin-top:15px"><h2>🔧 Optimizations</h2>${tips.map(t=>`<div class="fun-fact">${t}</div>`).join('')}<p style="color:var(--warm);margin-top:10px">The tax game is a game. Know the rules. Play well. Understanding is love. 😂💓</p></div>`;
+gainXP(20,'en');
+}
+
+function renderFiling(){
+document.getElementById('filing-list').innerHTML=FILING.map(f=>
+`<div class="filing-card">
+<h3>${f.type} <span class="status status-due">${f.deadline}</span></h3>
+<p><strong style="color:var(--blue)">Who:</strong> ${f.who}</p>
+<p><strong style="color:var(--red)">Penalty:</strong> ${f.penalty}</p>
+<p><strong style="color:var(--green)">Kingdom:</strong> ${f.kingdom}</p>
+</div>`).join('');
+}
+
+// ─── INIT ───────────────────────────────────────────────
+load();
+updateLevel();
+renderRoles();
+renderBarriers();
+renderJokes();
+renderFiling();
+</script>
+</body>
+</html>
