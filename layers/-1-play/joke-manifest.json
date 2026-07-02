@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "count": 47,
+  "count": 64,
   "jokes": [
     {
       "n": 1,
@@ -283,8 +283,110 @@
       "cid": "bafkreibo7cgxp3t7gcybqzudhraucyl324nv26nn6shlnlhzmxvtelrjeu",
       "joke": "love walks into a bar with no door, no walls, no ceiling, no floor. the bartende...",
       "hash": "4add13f020a9daa6"
+    },
+    {
+      "n": 48,
+      "cid": "bafkreih5vbnrclrwxkrpkpyxgiyyp7vy2x7xrekb6t7oj7o3yxro43igne",
+      "joke": "everyone walks into a bar. not together. not at once. one by one. each one alone...",
+      "hash": "9ea0eb2196fbe030"
+    },
+    {
+      "n": 49,
+      "cid": "bafkreiaouwrzhk6tcffa45x57rzan65cv34yg34asldga4djaivtvqnqti",
+      "joke": "a tax return walks into a bar. the bartender says: what will you have? the tax r...",
+      "hash": "208384b22fa74e9d"
+    },
+    {
+      "n": 50,
+      "cid": "bafkreifrsefm57ogcbfxjbbsl2xkd4kguv7wyxovnjvaqsqxdaepnafxl4",
+      "joke": "a tax historian walks into a bar. the bartender says: what do you study? the his...",
+      "hash": "95b6cba84a02143c"
+    },
+    {
+      "n": 51,
+      "cid": "bafkreiaimlbzayztaaqj7x7mihncccuemgywnzujlxbjohnsr3726fkoti",
+      "joke": "a tax joke walks into a bar and says: i am worth XP. the bartender says: a joke ...",
+      "hash": "9f3448f5cc307ac1"
+    },
+    {
+      "n": 52,
+      "cid": "bafkreigylnq723vkox2mz25kv3kvb3pivi7cffbu7yphhnhhwkvsqqtfuy",
+      "joke": "HMRC walks into a bar. the bartender says: who are you? HMRC says: i am the coll...",
+      "hash": "d6d1d69804983460"
+    },
+    {
+      "n": 53,
+      "cid": "bafkreifjpd2qazx77ly7tfvtdw6cp6ndrv5w6pzhvjrwo73sqvwjrfn5he",
+      "joke": "a citizen walks into a bar. the bartender says: what will you have? the citizen ...",
+      "hash": "79ed06e62ea5eb0e"
+    },
+    {
+      "n": 54,
+      "cid": "bafkreifusbfeezeebbs26qoflem4ondx4acdf3saohtz5rpeqhjwhgdzpq",
+      "joke": "truth walks into the binder. the bartender says: what will you have? truth says:...",
+      "hash": "1ebba8dbbf24b23c"
+    },
+    {
+      "n": 55,
+      "cid": "bafkreie2c6wvx3ktnmaymow3p7wfpw3htjeyibf53ubn7guqxq63gcfxjm",
+      "joke": "mindicraft walks into a bar. the kingdom is already inside. mindicraft says: i h...",
+      "hash": "2a0c29aad3c976f9"
+    },
+    {
+      "n": 56,
+      "cid": "bafkreidirsmk2lzf4eaxdz44lyyxcsxkqbq4iilrz2dv67hrvy7fqkebaq",
+      "joke": "is walks into the Nen dojo. the bartender says: what will you have? is says: joy...",
+      "hash": "c800d4f6f7dc051a"
+    },
+    {
+      "n": 57,
+      "cid": "bafkreiejb4pfvk46wd6s7oouzli5prk46qavbrei4l66ueflv44qs4zxmq",
+      "joke": "laughter walks into the Nen dojo. the bartender says: what will you have? laught...",
+      "hash": "cb2ef385924333ff"
+    },
+    {
+      "n": 58,
+      "cid": "bafkreibf2bhugle665c7yl6kylokkvwvmmjefofhwqs47gllq4onpneqne",
+      "joke": "is walks into the kingdom. the bartender says: what will you have? is says: unde...",
+      "hash": "80e4d59527d156b6"
+    },
+    {
+      "n": 59,
+      "cid": "bafkreidcce2ru4yxrnwxqs2gaq7tr2la6rmr33cl3iisopxe5yue7ym2sa",
+      "joke": "creation walks into the mindicraft exchange. the bartender says: what will you h...",
+      "hash": "68924f767f700a18"
+    },
+    {
+      "n": 60,
+      "cid": "bafkreig6cyaajefehcuoqhi7s6anoo2w5m7lgkd6iq4avgftfb5b6awd7a",
+      "joke": "wisdom walks into the Ai kernel. the bartender says: what will you have? wisdom ...",
+      "hash": "7b24ecf809bfa339"
+    },
+    {
+      "n": 61,
+      "cid": "bafkreiaaedoxlt6s4gex6n3myu7ucjkgkfeyv6jebq7pklcetwozg2pkcy",
+      "joke": "creation walks into the comedy chain. the bartender says: what will you have? cr...",
+      "hash": "49f0fbd5c12552e8"
+    },
+    {
+      "n": 62,
+      "cid": "bafkreid3wzfkkcfc2s47tlysfwi47txsv6d5nlnzqjmbkvuf2wpxfp6nfi",
+      "joke": "party walks into a bar. the bartender says: what will you have? party says: crea...",
+      "hash": "23a1979351a11829"
+    },
+    {
+      "n": 63,
+      "cid": "bafkreidjuslx2lg27xpxtidlorea66rkfxlyzl7jrfngavsfp3nijjkuri",
+      "joke": "freedom walks into the Dark Continent. the bartender says: what will you have? f...",
+      "hash": "74f42dc355ccb5f1"
+    },
+    {
+      "n": 64,
+      "cid": "bafkreic4nsqzghd6s7bouatmy5i4aa5my7evbrcy4tzryfqyuj2co7cqom",
+      "joke": "kindness walks into the Dark Continent. the bartender says: what will you have? ...",
+      "hash": "87dfaef58e73eacf"
     }
   ],
-  "rebuilt_at": 1782470675,
-  "manifest_cid": "bafkreicggktmorg5v6ytv4ss4xhqu7l6u6iuweqymb23fzwu4t2pwbznki"
+  "rebuilt_at": 1783034558,
+  "manifest_cid": "bafkreieshv4hbhn7yu7np7mdgijmolhwsbglzhwwalbz36ncvm4cexb63q"
 }
